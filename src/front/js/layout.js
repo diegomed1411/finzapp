@@ -6,6 +6,7 @@ import { Home } from "./pages/home";
 import { Demo } from "./pages/demo";
 import { Single } from "./pages/single";
 import SignUp from "./pages/SignUp";
+import LogIn from "./pages/LogIn";
 import injectContext from "./store/appContext";
 
 //create your first component
@@ -24,6 +25,9 @@ const Layout = () => {
 						</Route>
 						<Route exact path="/signup">
 							<SignUp />
+						</Route>
+						<Route exact path="/login">
+							<LogIn />
 						</Route>
 						<Route exact path="/demo">
 							<Demo />
