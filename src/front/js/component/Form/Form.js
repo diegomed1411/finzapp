@@ -6,9 +6,9 @@ import "./styles.scss";
 const Form = ({ inputs, buttonLabel }) => {
 	return (
 		<div className="form">
-			{inputs.map(({ label, type, placeholder }, index) => (
-				<div key={label + index} className="container input-group-lg">
-					<label>{label}</label>
+			{inputs.map(({ label, type, placeholder, width }, index) => (
+				<div key={label + index} className="input-container" style={{ width: `${width}` }}>
+					<label className="input-title">{label}</label>
 					<input
 						type="text"
 						placeholder={placeholder}
@@ -30,7 +30,8 @@ Form.propTypes = {
 		shape({
 			type: string,
 			placeholder: string,
-			label: string
+			label: string,
+			width: string
 		})
 	),
 	buttonLabel: string

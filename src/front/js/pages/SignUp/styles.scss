@@ -1,5 +1,26 @@
 .sign-up {
-    min-height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: end;
+  height: 100vh;
+  width: 100vw;    
+  background-color: #bfbdc1;
+  background: rgb(222,184,65);
+  background: radial-gradient(circle, rgba(222,184,65,1) 0%, rgba(222,158,54,1) 100%);
+
+  .title {
     width: 100%;
-    background-color: #6d6a75;
+    text-align: center;
+  }
+
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    width: 30%;
+    min-width: 500px;
+    background-color: #ffffff; 
+    padding: 22px 52px;
+  }
 }
