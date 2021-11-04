@@ -21,7 +21,7 @@ class CurrencyType (enum.Enum):
     USD="USD"
 
 
-class Users (db.Model):
+class User (db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), unique=False, nullable=False)
     lastname = db.Column(db.String(250), unique=False, nullable=False)
@@ -32,7 +32,7 @@ class Users (db.Model):
     outgoings_id = db.relationship('outgoings', backref="users")
 
 def __repr__(self):
-    return '<Users %r>' % self.email
+    return '<User %r>' % self.email
 
 def serialize(self):
         return {
@@ -47,7 +47,7 @@ def serialize(self):
 
 class Incomes (db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
     type = db.Column(db.Enum(IncomeType), unique=False, nullable=False)
     subtype = db.Column(db.String(250), unique=False, nullable=False)
     currency = db.Column(db.Enum(CurrencyType), unique=False, nullable=False)
@@ -74,7 +74,7 @@ def serialize(self):
     
 class Outgoings (db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
     type = db.Column(db.Enum(OutgoingType), unique=False, nullable=False)
     subtype = db.Column(db.String(250), unique=False, nullable=False)
     date = db.Column(db.Date, unique=False, nullable=False)
