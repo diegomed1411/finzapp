@@ -1,0 +1,17 @@
+.form {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+
+    .submit-button {
+        margin-top: 16px;
+        background-color: #deb841;
+        transition: 0.3s;
+
+        &:hover {
+            background-color: #de9e36;
+        }
+    }
+}
