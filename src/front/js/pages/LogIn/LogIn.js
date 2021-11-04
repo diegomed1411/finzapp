@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 import "./styles.scss";
 import Form from "../../component/Form";
 
-const inputs = [
+const inputsType = [
 	{
 		type: "email",
 		placeholder: "Email",
@@ -20,10 +20,15 @@ const inputs = [
 ];
 
 const LogIn = () => {
+	const [inputs, setInputs] = useState({
+		email: "",
+		password: ""
+	});
+
 	return (
 		<div className="login">
 			<div className="form-container">
-				<Form inputs={inputs} buttonLabel="Iniciar sesión" />
+				<Form inputsType={inputsType} inputs={inputs} setInputs={setInputs} buttonLabel="Iniciar sesión" />
 				<div className="bottom-container">
 					{"¿Olvidaste tu contraseña? "}
 					<Link to="/forgot-password">Haz click aquí.</Link>

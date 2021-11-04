@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 import "./styles.scss";
 import Form from "../../component/Form";
 
-const inputs = [
+const inputsType = [
 	{
 		type: "name",
 		placeholder: "José",
@@ -30,7 +30,7 @@ const inputs = [
 		width: "100%"
 	},
 	{
-		type: "password",
+		type: "repeatPassword",
 		placeholder: "Repetir contraseña",
 		label: "Repetir contraseña",
 		width: "100%"
@@ -38,11 +38,19 @@ const inputs = [
 ];
 
 const SignUp = () => {
+	const [inputs, setInputs] = useState({
+		name: "",
+		lastname: "",
+		email: "",
+		password: "",
+		repeatPassword: ""
+	});
+
 	return (
 		<div className="sign-up">
 			<div className="form-container">
 				<h2 className="title">Crea una cuenta gratis y gestiona tus finanzas</h2>
-				<Form inputs={inputs} buttonLabel="Crear cuenta" />
+				<Form inputsType={inputsType} inputs={inputs} setInputs={setInputs} buttonLabel="Crear cuenta" />
 				<div className="bottom-container">
 					{"¿Ya estas registrado? "}
 					<Link to="/login">Haz click aquí.</Link>
