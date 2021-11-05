@@ -4,17 +4,17 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 class OutgoingType (enum.Enum):
-    Entertainment = "Entretenimiento"
-    Food = "Comidas y bebidas"
-    Home = "Casa"
-    Life = "Vida"
-    Transport = "Transporte"
-    Vacations = "Vacaciones"
-    Services = "Servicios"
+    Entretenimiento = "Entretenimiento"
+    Alimentos = "Comidas y bebidas"
+    Casa = "Casa"
+    Vida = "Vida"
+    Transporte = "Transporte"
+    Vacaciones = "Vacaciones"
+    Servicios = "Servicios"
 
 class IncomeType (enum.Enum):
-    work="Trabajo"
-    capital="Capital"
+    Trabajo="Trabajo"
+    Capital="Capital"
 
 class CurrencyType (enum.Enum):
     UYU="UYU"
@@ -28,8 +28,8 @@ class User (db.Model):
     email = db.Column(db.String(250), unique=False, nullable=False)
     password = db.Column(db.String(250), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
-    incomes_id = db.relationship('incomes', backref="users")
-    outgoings_id = db.relationship('outgoings', backref="users")
+    incomes_id = db.relationship('Incomes', backref="user", lazy=True)
+    outgoings_id = db.relationship('Outgoings', backref="user")
 
 def __repr__(self):
     return '<User %r>' % self.email
@@ -40,14 +40,14 @@ def serialize(self):
             "name": self.name,
             "lastname": self.lastname,
             "email": self.email,
-            "is_active": self.is_active
+            "is_active": self.is_active,
             # do not serialize the password, its a security breach
         }
 
 
 class Incomes (db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     type = db.Column(db.Enum(IncomeType), unique=False, nullable=False)
     subtype = db.Column(db.String(250), unique=False, nullable=False)
     currency = db.Column(db.Enum(CurrencyType), unique=False, nullable=False)
@@ -67,14 +67,14 @@ def serialize(self):
             "currency": self.currency,
             "description": self.description,
             "date": self.date,
-            "amount": self.amount
+            "amount": self.amount,
             # do not serialize the password, its a security breach
         }
 
     
 class Outgoings (db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     type = db.Column(db.Enum(OutgoingType), unique=False, nullable=False)
     subtype = db.Column(db.String(250), unique=False, nullable=False)
     date = db.Column(db.Date, unique=False, nullable=False)
@@ -94,6 +94,6 @@ def serialize(self):
             "currency": self.currency,
             "description": self.description,
             "date": self.date,
-            "amount": self.amount
+            "amount": self.amount,
             # do not serialize the password, its a security breach
         }
