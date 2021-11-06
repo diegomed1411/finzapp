@@ -51,7 +51,7 @@ class Incomes (db.Model):
     type = db.Column(db.Enum(IncomeType), unique=False, nullable=False)
     subtype = db.Column(db.String(250), unique=False, nullable=False)
     currency = db.Column(db.Enum(CurrencyType), unique=False, nullable=False)
-    description = db.Column(db.String(250), unique=False, nullable=False)
+    description = db.Column(db.String(250), unique=False, nullable=True)
     date = db.Column(db.Date, unique=False, nullable=False)
     amount = db.Column(db.Integer, unique=False, nullable=False)
 
@@ -80,7 +80,7 @@ class Outgoings (db.Model):
     date = db.Column(db.Date, unique=False, nullable=False)
     currency = db.Column(db.Enum(CurrencyType), unique=False, nullable=False)
     amount = db.Column(db.Integer, unique=False, nullable=False)
-    description = db.Column(db.String(250), unique=False, nullable=False)
+    description = db.Column(db.String(250), unique=False, nullable=True)
 
 def __repr__(self):
     return '<Outgoings %r>' % self.id
