@@ -3,24 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-class OutgoingType (enum.Enum):
-    Entretenimiento = "Entretenimiento"
-    Alimentos = "Comidas y bebidas"
-    Casa = "Casa"
-    Vida = "Vida"
-    Transporte = "Transporte"
-    Vacaciones = "Vacaciones"
-    Servicios = "Servicios"
-
-class IncomeType (enum.Enum):
-    Trabajo="Trabajo"
-    Capital="Capital"
-
-class CurrencyType (enum.Enum):
-    UYU="UYU"
-    USD="USD"
-
-
 class User (db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), unique=False, nullable=False)
@@ -40,7 +22,7 @@ def serialize(self):
             "name": self.name,
             "lastname": self.lastname,
             "email": self.email,
-            "is_active": self.is_active,
+            "isActive": self.is_active,
             # do not serialize the password, its a security breach
         }
 
@@ -48,9 +30,9 @@ def serialize(self):
 class Incomes (db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    type = db.Column(db.Enum(IncomeType), unique=False, nullable=False)
+    type = db.Column(db.String(250), unique=False, nullable=False)
     subtype = db.Column(db.String(250), unique=False, nullable=False)
-    currency = db.Column(db.Enum(CurrencyType), unique=False, nullable=False)
+    currency = db.Column(db.String(250), unique=False, nullable=False)
     description = db.Column(db.String(250), unique=False, nullable=True)
     date = db.Column(db.Date, unique=False, nullable=False)
     amount = db.Column(db.Integer, unique=False, nullable=False)
@@ -75,10 +57,10 @@ def serialize(self):
 class Outgoings (db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    type = db.Column(db.Enum(OutgoingType), unique=False, nullable=False)
+    type = db.Column(db.String(250), unique=False, nullable=False)
     subtype = db.Column(db.String(250), unique=False, nullable=False)
     date = db.Column(db.Date, unique=False, nullable=False)
-    currency = db.Column(db.Enum(CurrencyType), unique=False, nullable=False)
+    currency = db.Column(db.String(250), unique=False, nullable=False)
     amount = db.Column(db.Integer, unique=False, nullable=False)
     description = db.Column(db.String(250), unique=False, nullable=True)
 
