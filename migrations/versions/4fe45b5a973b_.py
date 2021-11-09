@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: d40f07bfefc9
+Revision ID: 4fe45b5a973b
 Revises: 
-Create Date: 2021-11-08 23:19:08.563084
+Create Date: 2021-11-09 00:41:56.713669
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'd40f07bfefc9'
+revision = '4fe45b5a973b'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -30,10 +30,10 @@ def upgrade():
     op.create_table('incomes',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('type', sa.Enum('Trabajo', 'Capital', name='incometype'), nullable=False),
+    sa.Column('type', sa.String(length=250), nullable=False),
     sa.Column('subtype', sa.String(length=250), nullable=False),
-    sa.Column('currency', sa.Enum('UYU', 'USD', name='currencytype'), nullable=False),
-    sa.Column('description', sa.String(length=250), nullable=False),
+    sa.Column('currency', sa.String(length=250), nullable=False),
+    sa.Column('description', sa.String(length=250), nullable=True),
     sa.Column('date', sa.Date(), nullable=False),
     sa.Column('amount', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
@@ -42,12 +42,12 @@ def upgrade():
     op.create_table('outgoings',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('type', sa.Enum('Entretenimiento', 'Alimentos', 'Casa', 'Vida', 'Transporte', 'Vacaciones', 'Servicios', name='outgoingtype'), nullable=False),
+    sa.Column('type', sa.String(length=250), nullable=False),
     sa.Column('subtype', sa.String(length=250), nullable=False),
     sa.Column('date', sa.Date(), nullable=False),
-    sa.Column('currency', sa.Enum('UYU', 'USD', name='currencytype'), nullable=False),
+    sa.Column('currency', sa.String(length=250), nullable=False),
     sa.Column('amount', sa.Integer(), nullable=False),
-    sa.Column('description', sa.String(length=250), nullable=False),
+    sa.Column('description', sa.String(length=250), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )

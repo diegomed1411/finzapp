@@ -22,14 +22,14 @@ def signup_post():
     if 'repeat_password' not in body:
         raise APIException('You need to specify the repeat_password.', status_code=400)
     
-    if password != repeat_password:
+    if body['password'] != body['repeat_password']:
         raise APIException('Passwords should be identical.', status_code=400)
 
     user = User.query.filter_by(email = body['email']).first()
     if user:
         raise APIException('There is already an account with this email.', status_code=400)
 
-    new_user = User(name=body['name'], lastname=body['lastname'], email=body['email'], password='password')
+    new_user = User(name=body['name'], lastname=body['lastname'], email=body['email'], password='password', is_active=True)
     db.session.add(new_user)
     db.session.commit()
     return "ok", 200
