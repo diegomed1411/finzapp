@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, url_for, Blueprint
 from api.utils import APIException, generate_sitemap
 from api.models import db, User
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+from flask_bcrypt import generate_password_hash, check_password_hash
 
 api = Blueprint('api', __name__)
 
@@ -29,7 +30,7 @@ def signup_post():
     if user:
         raise APIException('There is already an account with this email.', status_code=400)
 
-    new_user = User(name=body['name'], lastname=body['lastname'], email=body['email'], password='password', is_active=True)
+    new_user = User(name=body['name'], lastname=body['lastname'], email=body['email'], password=generate_password_hash(body['password'],10), is_active=True)
     db.session.add(new_user)
     db.session.commit()
     return "ok", 200
@@ -40,7 +41,7 @@ def login():
     password = request.json.get("password", None)
     
     user = User.query.filter_by(email = email).first()
-    if not user or user.password != password:
+    if not user or not check_password_hash(user.password, 'password'):
         raise APIException('Please check your login details and try again.', status_code=400)
 
     access_token = create_access_token(identity=user.id)
