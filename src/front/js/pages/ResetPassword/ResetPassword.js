@@ -6,30 +6,27 @@ import Form from "../../component/Form";
 
 const inputsType = [
 	{
-		type: "email",
-		placeholder: "Email",
-		label: "Email",
+		type: "password",
+		placeholder: "Nueva contraseña",
+		label: "Nueva contraseña",
 		width: "100%"
 	}
 ];
 
-const ForgotPassword = () => {
+const ResetPassword = () => {
 	const [inputs, setInputs] = useState({
-		email: ""
+		password: ""
 	});
 
 	return (
-		<div className="forgot-password">
+		<div className="reset-password">
 			<div className="form-container">
-				<h5 className="instructions">
-					Ingresa tu dirección de correo electrónico y te enviaremos instrucciones para recuperar tu
-					contraseña
-				</h5>
+				<h5 className="instructions">Ingresa tu nueva contraseña</h5>
 				<Form
 					inputsType={inputsType}
 					inputs={inputs}
 					setInputs={setInputs}
-					buttonLabel="Enviar instrucciones"
+					buttonLabel="Restaurar contraseña"
 				/>
 				<Link to="/">Cancelar</Link>
 			</div>
@@ -37,4 +34,4 @@ const ForgotPassword = () => {
 	);
 };
 
-export default ForgotPassword;
+export default ResetPassword;

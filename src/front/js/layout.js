@@ -7,6 +7,7 @@ import { Single } from "./pages/single";
 import SignUp from "./pages/SignUp";
 import LogIn from "./pages/LogIn";
 import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import injectContext from "./store/appContext";
 
@@ -32,6 +33,9 @@ const Layout = () => {
 						</Route>
 						<Route exact path="/forgot_password">
 							<ForgotPassword />
+						</Route>
+						<Route exact path="/reset_password">
+							<ResetPassword />
 						</Route>
 						<Route exact path="/demo">
 							<Demo />
