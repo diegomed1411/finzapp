@@ -22,7 +22,7 @@ const ForgotPassword = () => {
 		<div className="forgot-password">
 			<div className="form-container">
 				<h5 className="instructions">
-					Ingresa tu dirección de correo electronico y te enviaremos instrucciones para recuperar tu
+					Ingresa tu dirección de correo electrónico y te enviaremos instrucciones para recuperar tu
 					contraseña
 				</h5>
 				<Form

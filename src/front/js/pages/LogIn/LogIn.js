@@ -31,7 +31,7 @@ const LogIn = () => {
 				<Form inputsType={inputsType} inputs={inputs} setInputs={setInputs} buttonLabel="Iniciar sesión" />
 				<div>
 					{"¿Olvidaste tu contraseña? "}
-					<Link to="/forgot-password">Haz click aquí.</Link>
+					<Link to="/forgot_password">Haz click aquí.</Link>
 				</div>
 			</div>
 		</div>
