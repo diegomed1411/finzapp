@@ -1,0 +1,12 @@
+.not-found {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;    
+    background-color: #bfbdc1;
+    background: rgb(222,184,65);
+    background: radial-gradient(circle, rgba(222,184,65,1) 0%, rgba(222,158,54,1) 100%);
+}

@@ -7,6 +7,7 @@ import { Single } from "./pages/single";
 import SignUp from "./pages/SignUp";
 import LogIn from "./pages/LogIn";
 import ForgotPassword from "./pages/ForgotPassword";
+import NotFound from "./pages/NotFound";
 import injectContext from "./store/appContext";
 
 //create your first component
@@ -39,7 +40,7 @@ const Layout = () => {
 							<Single />
 						</Route>
 						<Route>
-							<h1>Not found!</h1>
+							<NotFound />
 						</Route>
 					</Switch>
 				</ScrollToTop>
