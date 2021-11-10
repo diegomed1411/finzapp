@@ -29,7 +29,7 @@ const LogIn = () => {
 		<div className="login">
 			<div className="form-container">
 				<Form inputsType={inputsType} inputs={inputs} setInputs={setInputs} buttonLabel="Iniciar sesión" />
-				<div className="bottom-container">
+				<div>
 					{"¿Olvidaste tu contraseña? "}
 					<Link to="/forgot-password">Haz click aquí.</Link>
 				</div>

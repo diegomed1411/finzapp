@@ -13,13 +13,13 @@ const inputsType = [
 	}
 ];
 
-const LostPassword = () => {
+const ForgotPassword = () => {
 	const [inputs, setInputs] = useState({
 		email: ""
 	});
 
 	return (
-		<div className="lost-password">
+		<div className="forgot-password">
 			<div className="form-container">
 				<h5 className="instructions">
 					Ingresa tu dirección de correo electronico y te enviaremos instrucciones para recuperar tu
@@ -37,4 +37,4 @@ const LostPassword = () => {
 	);
 };
 
-export default LostPassword;
+export default ForgotPassword;

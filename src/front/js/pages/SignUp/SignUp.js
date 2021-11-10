@@ -51,7 +51,7 @@ const SignUp = () => {
 			<div className="form-container">
 				<h2 className="title">Crea una cuenta gratis y gestiona tus finanzas</h2>
 				<Form inputsType={inputsType} inputs={inputs} setInputs={setInputs} buttonLabel="Crear cuenta" />
-				<div className="bottom-container">
+				<div>
 					{"¿Ya estas registrado? "}
 					<Link to="/login">Haz click aquí.</Link>
 				</div>
