@@ -51,7 +51,7 @@ def login():
 def ingresos():
     if request.method == 'POST':
         request_body= request.json
-        ingreso= Ingresos(user_id=request_body['user_id'],type=request_body['type'], subtype=request_body['subtype'], currency=request_body['currency'], description=request_body['description'], date=request_body['date'], amount=request_body['amount'])
+        ingreso= Incomes(user_id=request_body['user_id'],type=request_body['type'], subtype=request_body['subtype'], currency=request_body['currency'], description=request_body['description'], date=request_body['date'], amount=request_body['amount'])
         db.session.add(ingreso)
         db.session.commit()
         #listamos en json todos los ingresos
@@ -65,7 +65,7 @@ def ingresos():
 
         return jsonify(all_incomes), 200
 
-@app.route('/incomes/<int:id>', methods=['GET', 'DELETE'])
+@api.route('/incomes/<int:id>', methods=['GET', 'DELETE', 'PUT'])
 def get_income(id):
     if request.method == 'GET':
         body=request.json
@@ -80,7 +80,41 @@ def get_income(id):
         if income is None:
             raise APIException('Ingreso no encontrado', status_code=404)
         else:
+            db.session.delete(income)
+            db.session.commit()
             return jsonify(income.serialize()), 200
+
+    
+    if request.method == 'PUT':
+        body=request.json
+        income=Incomes.query.get(id)
+        if income is None:
+            raise APIException('Ingreso no encontrado', status_code=404)
+        else:
+            if "type" in body:
+                income.type = body["type"]
+            if "subtype" in body:
+                income.subtype = body["subtype"]
+            if "currency" in body:
+                income.currency = body["currency"]
+            if "description" in body:
+                income.description = body["description"]
+            if "date" in body:
+                income.date = body["date"]
+            if "amount" in body:
+                income.amount = body["amount"]
+            db.session.commit()        
+        #income = Incomes.query.get(id)
+            income = income.serialize()
+        return jsonify(income), 200
+
+
+    db.session.commit()
+
+    planet = Planet.query.get(id)
+    planet = planet.serialize()
+    return jsonify(planet), 201
+
 
 
 
