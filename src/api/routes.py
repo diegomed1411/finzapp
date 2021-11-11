@@ -108,9 +108,7 @@ def get_income(id):
             income = income.serialize()
         return jsonify(income), 200
 
-#crud de egresos
-
-<<<<<<< HEAD
+#-------------------------crud de egresos-------------------------------------
 
 @api.route('/outgoings', methods=['POST', 'GET'])
 def egresos():
