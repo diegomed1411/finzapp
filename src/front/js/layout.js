@@ -1,12 +1,14 @@
 import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 
-import { Home } from "./pages/home";
 import { Demo } from "./pages/demo";
 import { Single } from "./pages/single";
 import SignUp from "./pages/SignUp";
 import LogIn from "./pages/LogIn";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import NotFound from "./pages/NotFound";
 import injectContext from "./store/appContext";
 
 //create your first component
@@ -21,13 +23,19 @@ const Layout = () => {
 				<ScrollToTop>
 					<Switch>
 						<Route exact path="/">
-							<Home />
+							<Redirect to="/signup" />
 						</Route>
 						<Route exact path="/signup">
 							<SignUp />
 						</Route>
 						<Route exact path="/login">
 							<LogIn />
+						</Route>
+						<Route exact path="/forgot_password">
+							<ForgotPassword />
+						</Route>
+						<Route exact path="/reset_password">
+							<ResetPassword />
 						</Route>
 						<Route exact path="/demo">
 							<Demo />
@@ -36,7 +44,7 @@ const Layout = () => {
 							<Single />
 						</Route>
 						<Route>
-							<h1>Not found!</h1>
+							<NotFound />
 						</Route>
 					</Switch>
 				</ScrollToTop>
