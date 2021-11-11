@@ -108,13 +108,69 @@ def get_income(id):
             income = income.serialize()
         return jsonify(income), 200
 
+#crud de egresos
 
-    db.session.commit()
 
-    planet = Planet.query.get(id)
-    planet = planet.serialize()
-    return jsonify(planet), 201
+@api.route('/outgoings', methods=['POST', 'GET'])
+def egresos():
+    if request.method == 'POST':
+        request_body= request.json
+        egreso= Outgoings(user_id=request_body['user_id'],type=request_body['type'], subtype=request_body['subtype'], currency=request_body['currency'], description=request_body['description'], date=request_body['date'], amount=request_body['amount'])
+        db.session.add(egreso)
+        db.session.commit()
+        #listamos en json todos los egresos
+        all_outgoings=Outgoings.query.all()
+        all_outgoings=list(map(lambda x: x.serialize(),all_outgoings))
+    
+        return jsonify(all_outgoings), 200
+    if request.method == 'GET':
+        all_outgoings=Outgoings.query.all()
+        all_outgoings=list(map(lambda x: x.serialize(),all_outgoings))
 
+        return jsonify(all_outgoings), 200
+
+@api.route('/outgoings/<int:id>', methods=['GET', 'DELETE', 'PUT'])
+def get_outgoing(id):
+    if request.method == 'GET':
+        body=request.json
+        outgoing=Outgoings.query.get(id)
+        if outgoing is None:
+            raise APIException('Ingreso no encontrado', status_code=404)
+        else:
+            return jsonify(outgoing.serialize()), 200
+
+    if request.method == 'DELETE':
+        outgoing=Outgoings.query.get(id)
+        if outgoing is None:
+            raise APIException('Ingreso no encontrado', status_code=404)
+        else:
+            db.session.delete(outgoing)
+            db.session.commit()
+            return jsonify(outgoing.serialize()), 200
+
+    
+    if request.method == 'PUT':
+        body=request.json
+        outgoing=Outgoings.query.get(id)
+        if outgoing is None:
+            raise APIException('Ingreso no encontrado', status_code=404)
+        else:
+            if "type" in body:
+                outgoing.type = body["type"]
+            if "subtype" in body:
+                outgoing.subtype = body["subtype"]
+            if "currency" in body:
+                outgoing.currency = body["currency"]
+            if "description" in body:
+                outgoing.description = body["description"]
+            if "date" in body:
+                outgoing.date = body["date"]
+            if "amount" in body:
+                outgoing.amount = body["amount"]
+            db.session.commit()        
+        #outgoing = Outgoings.query.get(id)
+            outgoing = outgoing.serialize()
+        return jsonify(outgoing), 200
 
 
 
