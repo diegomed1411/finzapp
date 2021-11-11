@@ -110,6 +110,7 @@ def get_income(id):
 
 #crud de egresos
 
+<<<<<<< HEAD
 
 @api.route('/outgoings', methods=['POST', 'GET'])
 def egresos():
