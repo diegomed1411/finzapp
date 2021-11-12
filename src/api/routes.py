@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.utils import APIException, generate_sitemap
-from api.models import db, User
+from api.models import db, User, Outgoings, Incomes
+from api.utils import generate_sitemap, APIException
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 from flask_bcrypt import generate_password_hash, check_password_hash
 
@@ -9,7 +9,6 @@ api = Blueprint('api', __name__)
 @api.route('/signup', methods=['POST'])
 def signup_post():
     body = request.get_json()
-
     if body is None:
         raise APIException("You need to specify the request body as a json object.", status_code=400)
     if 'name' not in body:
@@ -46,3 +45,131 @@ def login():
 
     access_token = create_access_token(identity=user.id)
     return jsonify(access_token=access_token)
+
+
+@api.route('/incomes', methods=['POST', 'GET'])
+def ingresos():
+    if request.method == 'POST':
+        request_body= request.json
+        ingreso= Incomes(user_id=request_body['user_id'],type=request_body['type'], subtype=request_body['subtype'], currency=request_body['currency'], description=request_body['description'], date=request_body['date'], amount=request_body['amount'])
+        db.session.add(ingreso)
+        db.session.commit()
+        #listamos en json todos los ingresos
+        all_incomes=Incomes.query.all()
+        all_incomes=list(map(lambda x: x.serialize(),all_incomes))
+    
+        return jsonify(all_incomes), 200
+    if request.method == 'GET':
+        all_incomes=Incomes.query.all()
+        all_incomes=list(map(lambda x: x.serialize(),all_incomes))
+
+        return jsonify(all_incomes), 200
+
+@api.route('/incomes/<int:id>', methods=['GET', 'DELETE', 'PUT'])
+def get_income(id):
+    if request.method == 'GET':
+        body=request.json
+        income=Incomes.query.get(id)
+        if income is None:
+            raise APIException('Ingreso no encontrado', status_code=404)
+        else:
+            return jsonify(income.serialize()), 200
+
+    if request.method == 'DELETE':
+        income=Incomes.query.get(id)
+        if income is None:
+            raise APIException('Ingreso no encontrado', status_code=404)
+        else:
+            db.session.delete(income)
+            db.session.commit()
+            return jsonify(income.serialize()), 200
+
+    
+    if request.method == 'PUT':
+        body=request.json
+        income=Incomes.query.get(id)
+        if income is None:
+            raise APIException('Ingreso no encontrado', status_code=404)
+        else:
+            if "type" in body:
+                income.type = body["type"]
+            if "subtype" in body:
+                income.subtype = body["subtype"]
+            if "currency" in body:
+                income.currency = body["currency"]
+            if "description" in body:
+                income.description = body["description"]
+            if "date" in body:
+                income.date = body["date"]
+            if "amount" in body:
+                income.amount = body["amount"]
+            db.session.commit()        
+        #income = Incomes.query.get(id)
+            income = income.serialize()
+        return jsonify(income), 200
+
+#-------------------------crud de egresos-------------------------------------
+
+@api.route('/outgoings', methods=['POST', 'GET'])
+def egresos():
+    if request.method == 'POST':
+        request_body= request.json
+        egreso= Outgoings(user_id=request_body['user_id'],type=request_body['type'], subtype=request_body['subtype'], currency=request_body['currency'], description=request_body['description'], date=request_body['date'], amount=request_body['amount'])
+        db.session.add(egreso)
+        db.session.commit()
+        #listamos en json todos los egresos
+        all_outgoings=Outgoings.query.all()
+        all_outgoings=list(map(lambda x: x.serialize(),all_outgoings))
+    
+        return jsonify(all_outgoings), 200
+    if request.method == 'GET':
+        all_outgoings=Outgoings.query.all()
+        all_outgoings=list(map(lambda x: x.serialize(),all_outgoings))
+
+        return jsonify(all_outgoings), 200
+
+@api.route('/outgoings/<int:id>', methods=['GET', 'DELETE', 'PUT'])
+def get_outgoing(id):
+    if request.method == 'GET':
+        body=request.json
+        outgoing=Outgoings.query.get(id)
+        if outgoing is None:
+            raise APIException('Ingreso no encontrado', status_code=404)
+        else:
+            return jsonify(outgoing.serialize()), 200
+
+    if request.method == 'DELETE':
+        outgoing=Outgoings.query.get(id)
+        if outgoing is None:
+            raise APIException('Ingreso no encontrado', status_code=404)
+        else:
+            db.session.delete(outgoing)
+            db.session.commit()
+            return jsonify(outgoing.serialize()), 200
+
+    
+    if request.method == 'PUT':
+        body=request.json
+        outgoing=Outgoings.query.get(id)
+        if outgoing is None:
+            raise APIException('Ingreso no encontrado', status_code=404)
+        else:
+            if "type" in body:
+                outgoing.type = body["type"]
+            if "subtype" in body:
+                outgoing.subtype = body["subtype"]
+            if "currency" in body:
+                outgoing.currency = body["currency"]
+            if "description" in body:
+                outgoing.description = body["description"]
+            if "date" in body:
+                outgoing.date = body["date"]
+            if "amount" in body:
+                outgoing.amount = body["amount"]
+            db.session.commit()        
+        #outgoing = Outgoings.query.get(id)
+            outgoing = outgoing.serialize()
+        return jsonify(outgoing), 200
+
+
+

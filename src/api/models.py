@@ -13,16 +13,16 @@ class User (db.Model):
     incomes_id = db.relationship('Incomes', backref="user", lazy=True)
     outgoings_id = db.relationship('Outgoings', backref="user")
 
-def __repr__(self):
-    return '<User %r>' % self.email
+    def __repr__(self):
+        return '<User %r>' % self.email
 
-def serialize(self):
+    def serialize(self):
         return {
             "id": self.id,
             "name": self.name,
             "lastname": self.lastname,
             "email": self.email,
-            "isActive": self.is_active,
+            "isActive": self.is_active
             # do not serialize the password, its a security breach
         }
 
@@ -37,10 +37,10 @@ class Incomes (db.Model):
     date = db.Column(db.Date, unique=False, nullable=False)
     amount = db.Column(db.Integer, unique=False, nullable=False)
 
-def __repr__(self):
-    return '<Incomes %r>' % self.id
+    def __repr__(self):
+        return '<Incomes %r>' % self.id
 
-def serialize(self):
+    def serialize(self):
         return {
             "id": self.id,
             "user_id": self.user_id,
@@ -49,7 +49,7 @@ def serialize(self):
             "currency": self.currency,
             "description": self.description,
             "date": self.date,
-            "amount": self.amount,
+            "amount": self.amount
             # do not serialize the password, its a security breach
         }
 
@@ -64,10 +64,10 @@ class Outgoings (db.Model):
     amount = db.Column(db.Integer, unique=False, nullable=False)
     description = db.Column(db.String(250), unique=False, nullable=True)
 
-def __repr__(self):
-    return '<Outgoings %r>' % self.id
+    def __repr__(self):
+        return '<Outgoings %r>' % self.id
 
-def serialize(self):
+    def serialize(self):
         return {
             "id": self.id,
             "user_id": self.user_id,
@@ -76,6 +76,6 @@ def serialize(self):
             "currency": self.currency,
             "description": self.description,
             "date": self.date,
-            "amount": self.amount,
+            "amount": self.amount
             # do not serialize the password, its a security breach
         }
