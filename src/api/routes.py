@@ -46,6 +46,7 @@ def login():
     access_token = create_access_token(identity=user.id)
     return jsonify(access_token=access_token)
 
+#-------------- crud de ingresos --------------
 
 @api.route('/incomes', methods=['POST', 'GET'])
 def ingresos():
@@ -170,6 +171,3 @@ def get_outgoing(id):
         #outgoing = Outgoings.query.get(id)
             outgoing = outgoing.serialize()
         return jsonify(outgoing), 200
-
-
-
