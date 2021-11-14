@@ -171,3 +171,15 @@ def get_outgoing(id):
         #outgoing = Outgoings.query.get(id)
             outgoing = outgoing.serialize()
         return jsonify(outgoing), 200
+
+
+
+@api.route('/summaryinc/<int:id>', methods=['GET'])
+def get_ingresos_usuario(id):
+    if request.method == 'GET':
+        outgoing= id
+        #outgoing=Outgoings.query.get(id)
+        if outgoing is None:
+            raise APIException('Ingreso no encontrado', status_code=404)
+        else:
+            return (outgoing), 200
