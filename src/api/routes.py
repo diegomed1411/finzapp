@@ -174,8 +174,8 @@ def get_outgoing(id):
 
 
 
-@api.route('/summaryinc/<int:id>', methods=['GET'])
-def get_ingresos_usuario(id):
+@api.route('/summaryinc/<int:id_user>', methods=['GET'])
+def get_ingresos_usuario(id_user):
     if request.method == 'GET':
         outgoing= id
         #outgoing=Outgoings.query.get(id)
