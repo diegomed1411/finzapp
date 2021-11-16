@@ -72,7 +72,7 @@ def ingresos():
         else:
             description = request_body['description']
 
-        ingreso= Incomes(user_id=id, type=request_body['type'], subtype=request_body['subtype'], currency=request_body['currency'], description=description, date=request_body['date'], amount=request_body['amount'])
+        ingreso= Incomes(user_id=id, type=request_body['type'], subtype=request_body['subtype'], currency=request_body['currency'].upper(), description=description, date=request_body['date'], amount=request_body['amount'])
         db.session.add(ingreso)
         db.session.commit()
         #listamos en json todos los ingresos
@@ -217,12 +217,24 @@ def get_outgoing(id):
 
 
 
-@api.route('/summaryinc/<int:id_user>', methods=['GET'])
-def get_ingresos_usuario(id_user):
+@api.route('/summaryinc', methods=['GET'])
+#@jwt_required()
+def get_ingresos_usuario():
+    #id_user= get_jwt_identity()
+    id_user= 1
     if request.method == 'GET':
-        outgoing= id
-        #outgoing=Outgoings.query.get(id)
-        if outgoing is None:
-            raise APIException('Ingreso no encontrado', status_code=404)
+        body=request.json
+        user_incomes =Incomes.query.filter_by(user_id= id_user)
+        user_incomes=list(map(lambda x: x.serialize(),user_incomes))
+        currencies = []
+        for income in user_incomes:
+            if income['currency'].upper() not in currencies:
+                currencies.append(income['currency'].upper())
+
+        for currency in currencies:
+            user_incomes
+        
+        if user_incomes is None:
+            raise APIException('El usuario no tiene ingresos registrados', status_code=404)
         else:
-            return (outgoing), 200
+            return jsonify(user_incomes, currencies), 200
