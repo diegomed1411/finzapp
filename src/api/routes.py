@@ -46,6 +46,16 @@ def login():
     access_token = create_access_token(identity=user.id)
     return jsonify(access_token=access_token)
 
+@api.route("/send_reset_password", methods=["POST"])
+def send_reset_password():
+    email = request.json.get("email", None)
+    user = User.query.filter_by(email=email).first()
+
+    if not user:
+        raise APIException('Please check the entered email and try again', status_code=404)
+
+    access_token = create_access_token(identity=user.id)
+    return jsonify(access_token=access_token)
 
 @api.route('/incomes', methods=['POST', 'GET'])
 @jwt_required()
