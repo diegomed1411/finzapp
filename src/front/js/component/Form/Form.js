@@ -3,7 +3,7 @@ import { any, arrayOf, shape, string } from "prop-types";
 
 import "./styles.scss";
 
-const Form = ({ inputsType, buttonLabel, inputs, setInputs }) => {
+const Form = ({ inputsType, buttonLabel, inputs, setInputs, onSubmit }) => {
 	return (
 		<div className="form">
 			{inputsType.map(({ label, type, placeholder, width }, index) => (
@@ -26,7 +26,7 @@ const Form = ({ inputsType, buttonLabel, inputs, setInputs }) => {
 					/>
 				</div>
 			))}
-			<button type="submit" className="btn btn-lg submit-button">
+			<button onClick={onSubmit} type="submit" className="btn btn-lg submit-button">
 				{buttonLabel}
 			</button>
 		</div>
@@ -44,7 +44,8 @@ Form.propTypes = {
 	),
 	buttonLabel: string,
 	inputs: any,
-	setInputs: any
+	setInputs: any,
+	onSubmit: () => any
 };
 
 export default Form;

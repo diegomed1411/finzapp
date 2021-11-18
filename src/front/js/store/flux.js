@@ -1,4 +1,8 @@
+import LogIn from "../pages/LogIn/LogIn";
+
 const getState = ({ getStore, getActions, setStore }) => {
+	const urlback = "https://3001-sapphire-alpaca-qpw4sfdc.ws-us18.gitpod.io/api"; // Defino url de peticion de API con 100 resultados
+
 	return {
 		store: {
 			message: null,
@@ -13,12 +17,31 @@ const getState = ({ getStore, getActions, setStore }) => {
 					background: "white",
 					initial: "white"
 				}
-			]
+			],
+			user: {}
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
 			exampleFunction: () => {
 				getActions().changeColor(0, "green");
+			},
+
+			signin: (email, password) => {
+				const data = { email, password };
+				fetch(`${urlback}/login`, {
+					method: "POST",
+					body: JSON.stringify(data),
+					headers: { "Content-Type": "application/json" }
+				})
+					.then(response => response.json())
+					.then(result => {
+						if (result.access_token) {
+							localStorage.setItem("jwt-token", result.access_token);
+						} else if (result.message) {
+							alert(result.message);
+						}
+					})
+					.catch(error => console.log("error", error));
 			},
 
 			getMessage: () => {
