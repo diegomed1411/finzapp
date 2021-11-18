@@ -1,8 +1,10 @@
-from flask import Flask, request, jsonify, url_for, Blueprint
+import os
+from flask import Flask, request, jsonify, url_for, Blueprint, current_app
 from api.models import db, User, Outgoings, Incomes
 from api.utils import generate_sitemap, APIException
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 from flask_bcrypt import generate_password_hash, check_password_hash
+from flask_mail import Message
 
 api = Blueprint('api', __name__)
 
@@ -53,9 +55,17 @@ def send_reset_password():
 
     if not user:
         raise APIException('Please check the entered email and try again', status_code=404)
+    
+    token = user.get_reset_token()
 
-    access_token = create_access_token(identity=user.id)
-    return jsonify(access_token=access_token)
+    msg = Message()
+    msg.subject = "Recupera tu contraseña"
+    msg.recipients = [email]
+    msg.sender = "finzappdevelopment@gmail.com"
+    msg.html = '<a href="">Para recuperar tu contraseña, haz click aquí.</a>'
+    
+    current_app.mail.send(msg)
+    return "Mail sent", 200
 
 @api.route('/incomes', methods=['POST', 'GET'])
 @jwt_required()

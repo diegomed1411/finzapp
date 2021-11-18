@@ -20,7 +20,7 @@ const Form = ({ inputsType, buttonLabel, inputs, setInputs, onSubmit }) => {
 					/>
 				</div>
 			))}
-			<button type="submit" className="btn btn-lg submit-button">
+			<button type="submit" className="btn btn-lg submit-button" onClick={onSubmit}>
 				{buttonLabel}
 			</button>
 		</div>

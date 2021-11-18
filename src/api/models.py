@@ -1,4 +1,5 @@
 import enum
+import os
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -12,6 +13,9 @@ class User (db.Model):
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
     incomes_id = db.relationship('Incomes', backref="user", lazy=True)
     outgoings_id = db.relationship('Outgoings', backref="user")
+    
+    def get_reset_token(self, expires=500):
+        return jwt.encode({'reset_password': self.username, 'exp': time() + expires}, key=os.getenv('SECRET_KEY_FLASK'))
 
     def __repr__(self):
         return '<User %r>' % self.email
