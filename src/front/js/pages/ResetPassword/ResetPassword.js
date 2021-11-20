@@ -31,7 +31,7 @@ const ResetPassword = () => {
 					inputs={inputs}
 					setInputs={setInputs}
 					buttonLabel="Restaurar contraseña"
-					onSubmit={() => actions.resetPassword(token.replace("~", "."), inputs.password)}
+					onSubmit={() => actions.resetPassword(token, inputs.password)}
 				/>
 				<Link to="/">Cancelar</Link>
 			</div>

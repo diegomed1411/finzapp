@@ -20,10 +20,10 @@ class User (db.Model):
         return jwt.encode({'reset_password': self.id, 'exp': time() + expires_in},
             os.getenv('FLASK_APP_KEY'), algorithm='HS256')
 
-    def verify_reset_password_token(token):
+    def verify_reset_token(token):
         try:
             id = jwt.decode(token, os.getenv('FLASK_APP_KEY'),
-                            algorithms=['HS256'])
+                            algorithms=['HS256'])['reset_password']
         except:
             return
         return User.query.get(id)

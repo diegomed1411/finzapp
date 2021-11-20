@@ -57,7 +57,7 @@ def send_reset_password():
         raise APIException('Please check the entered email and try again', status_code=404)
     
     token = user.get_reset_token().replace('.',"~")
-    link = f"https://3000-cyan-crocodile-nrnzjj6w.ws-us18.gitpod.io/reset_password/{token}"
+    link = f"https://3000-azure-swallow-c5iuhp2z.ws-us18.gitpod.io/reset_password/{token}"
 
     msg = Message()
     msg.subject = "Recupera tu contraseña"
@@ -70,16 +70,14 @@ def send_reset_password():
 
 @api.route("/reset_password", methods=["PUT"])
 def reset_password():
-    token = request.json['token']
-    print(token)
-    user = User.verify_reset_password_token(token)
-    print(user)
+    token = request.json['token'].replace("~",'.')
+    user = User.verify_reset_token(token)
     new_password = request.json['new_password']
 
     if not new_password:
         raise APIException("Please enter new password.", status_code=400)
     if not user:
-        raise APIException("Invalid token.", status_code=400)
+        raise APIException("Invalid token.", status_code=404)
 
     user.password = generate_password_hash(new_password).decode('utf-8')
     db.session.commit()

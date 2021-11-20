@@ -1,4 +1,4 @@
-const url = "https://3001-cyan-crocodile-nrnzjj6w.ws-us18.gitpod.io/api";
+const url = "https://3001-azure-swallow-c5iuhp2z.ws-us18.gitpod.io/api";
 
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
@@ -19,6 +19,20 @@ const getState = ({ getStore, getActions, setStore }) => {
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
+
+			sendResetPassword: email => {
+				let response;
+				fetch(`${url}/send_reset_password`, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({ email })
+				})
+					.then(resp => resp.json())
+					.then()
+					.catch();
+			},
 
 			resetPassword: (token, new_password) => {
 				fetch(`${url}/reset_password`, {
