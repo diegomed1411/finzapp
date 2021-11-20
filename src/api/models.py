@@ -1,5 +1,7 @@
 import enum
 import os
+import jwt
+from time import time
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -14,8 +16,17 @@ class User (db.Model):
     incomes_id = db.relationship('Incomes', backref="user", lazy=True)
     outgoings_id = db.relationship('Outgoings', backref="user")
     
-    def get_reset_token(self, expires=500):
-        return jwt.encode({'reset_password': self.username, 'exp': time() + expires}, key=os.getenv('SECRET_KEY_FLASK'))
+    def get_reset_token(self, expires_in=600):
+        return jwt.encode({'reset_password': self.id, 'exp': time() + expires_in},
+            os.getenv('FLASK_APP_KEY'), algorithm='HS256')
+
+    def verify_reset_password_token(token):
+        try:
+            id = jwt.decode(token, os.getenv('FLASK_APP_KEY'),
+                            algorithms=['HS256'])
+        except:
+            return
+        return User.query.get(id)
 
     def __repr__(self):
         return '<User %r>' % self.email

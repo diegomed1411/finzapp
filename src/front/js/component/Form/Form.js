@@ -39,7 +39,7 @@ Form.propTypes = {
 	buttonLabel: string,
 	inputs: any,
 	setInputs: any,
-	onSubmit?: () => any
+	onSubmit: () => any
 };
 
 export default Form;

@@ -56,22 +56,39 @@ def send_reset_password():
     if not user:
         raise APIException('Please check the entered email and try again', status_code=404)
     
-    token = user.get_reset_token()
+    token = user.get_reset_token().replace('.',"~")
+    link = f"https://3000-cyan-crocodile-nrnzjj6w.ws-us18.gitpod.io/reset_password/{token}"
 
     msg = Message()
     msg.subject = "Recupera tu contraseña"
     msg.recipients = [email]
-    msg.sender = "finzappdevelopment@gmail.com"
-    msg.html = '<a href="">Para recuperar tu contraseña, haz click aquí.</a>'
+    msg.sender = "finzapp"
+    msg.html = f'<p>Para recuperar tu contraseña, <a href={link}>haz click aquí</a></p>'
     
     current_app.mail.send(msg)
     return "Mail sent", 200
+
+@api.route("/reset_password/<token>", methods=["PUT"])
+def reset_password(token):
+    user = User.verify_reset_password_token(token)
+    new_password = request.json['new_password']
+
+    if not new_password:
+        raise APIException("Please enter new password.", status_code=400)
+    if not user:
+        raise APIException("Invalid token.", status_code=400)
+
+    user.password = generate_password_hash(new_password).decode('utf-8')
+    db.session.commit()
+
+    return 200
+    
 
 @api.route('/incomes', methods=['POST', 'GET'])
 @jwt_required()
 def ingresos():
     if request.method == 'POST':
-        request_body= request.json
+        request_body = request.json
         id = get_jwt_identity()
 
         if request_body is None:
