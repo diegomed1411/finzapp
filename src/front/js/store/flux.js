@@ -1,3 +1,5 @@
+const url = "https://3001-cyan-crocodile-nrnzjj6w.ws-us18.gitpod.io/api";
+
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
@@ -17,6 +19,20 @@ const getState = ({ getStore, getActions, setStore }) => {
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
+
+			resetPassword: (token, new_password) => {
+				fetch(`${url}/reset_password`, {
+					method: "PUT",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({ token, new_password })
+				})
+					.then(resp => resp.json())
+					.then()
+					.catch();
+			},
+
 			exampleFunction: () => {
 				getActions().changeColor(0, "green");
 			},

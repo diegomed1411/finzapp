@@ -68,9 +68,12 @@ def send_reset_password():
     current_app.mail.send(msg)
     return "Mail sent", 200
 
-@api.route("/reset_password/<token>", methods=["PUT"])
-def reset_password(token):
+@api.route("/reset_password", methods=["PUT"])
+def reset_password():
+    token = request.json['token']
+    print(token)
     user = User.verify_reset_password_token(token)
+    print(user)
     new_password = request.json['new_password']
 
     if not new_password:

@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router";
 
 import "./styles.scss";
 import Form from "../../component/Form";
+import { Context } from "../../store/appContext";
 
 const inputsType = [
 	{
@@ -14,6 +16,8 @@ const inputsType = [
 ];
 
 const ResetPassword = () => {
+	const { token } = useParams();
+	const { actions } = useContext(Context);
 	const [inputs, setInputs] = useState({
 		password: ""
 	});
@@ -27,6 +31,7 @@ const ResetPassword = () => {
 					inputs={inputs}
 					setInputs={setInputs}
 					buttonLabel="Restaurar contraseña"
+					onSubmit={() => actions.resetPassword(token.replace("~", "."), inputs.password)}
 				/>
 				<Link to="/">Cancelar</Link>
 			</div>
