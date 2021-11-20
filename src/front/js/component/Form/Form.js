@@ -10,7 +10,13 @@ const Form = ({ inputsType, buttonLabel, inputs, setInputs, onSubmit }) => {
 				<div key={label + index} className="input-container" style={{ width: `${width}` }}>
 					<label className="input-title">{label}</label>
 					<input
-						type="text"
+						type={
+							type === "password" || type === "repeatPassword"
+								? "password"
+								: type === "email"
+									? "email"
+									: "text"
+						}
 						placeholder={placeholder}
 						className="form-control input"
 						aria-label="Default"

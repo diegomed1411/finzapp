@@ -86,6 +86,7 @@ def reset_password():
 
     return 200
     
+#-------------- crud de ingresos --------------
 
 @api.route('/incomes', methods=['POST', 'GET'])
 @jwt_required()
@@ -111,7 +112,7 @@ def ingresos():
         else:
             description = request_body['description']
 
-        ingreso= Incomes(user_id=id, type=request_body['type'], subtype=request_body['subtype'], currency=request_body['currency'], description=description, date=request_body['date'], amount=request_body['amount'])
+        ingreso= Incomes(user_id=id, type=request_body['type'], subtype=request_body['subtype'], currency=request_body['currency'].upper(), description=description, date=request_body['date'], amount=request_body['amount'])
         db.session.add(ingreso)
         db.session.commit()
         #listamos en json todos los ingresos
@@ -256,3 +257,49 @@ def get_outgoing(id):
 
 
 
+@api.route('/summaryinc', methods=['GET'])
+@jwt_required()
+def get_ingresos_usuario():
+    id_user= get_jwt_identity()
+    if request.method == 'GET':
+        body=request.json
+        user_incomes =Incomes.query.filter_by(user_id= id_user)
+        user_incomes=list(map(lambda x: x.serialize(),user_incomes))
+        currencies = []
+        user_incomes_by_currency =[]
+        if user_incomes is None:
+            raise APIException('El usuario no tiene ingresos registrados', status_code=404)
+        else:
+            for income in user_incomes:
+                if income['currency'].upper() not in currencies:
+                    currencies.append(income['currency'].upper())
+            
+            for curr in currencies:
+                incomes = Incomes.query.filter_by(currency = curr, user_id = id_user)
+                user_incomes_by_currency.append({"currency": curr, "list": list(map(lambda x: x.serialize(),incomes))})
+            
+            return jsonify(user_incomes, currencies, user_incomes_by_currency), 200
+
+@api.route('/summaryout', methods=['GET'])
+#@jwt_required()
+def get_egresos_usuario():
+    #id_user= get_jwt_identity()
+    id_user= 1
+    if request.method == 'GET':
+        body=request.json
+        user_outgoings =Outgoings.query.filter_by(user_id= id_user)
+        user_outgoings=list(map(lambda x: x.serialize(),user_outgoings))
+        currencies = []
+        user_outgoings_by_currency =[]
+        if user_outgoings is None:
+            raise APIException('El usuario no tiene egresos registrados', status_code=404)
+        else:
+            for outgoing in user_outgoings:
+                if outgoing['currency'].upper() not in currencies:
+                    currencies.append(outgoing['currency'].upper())
+            
+            for curr in currencies:
+                outgoings = Outgoings.query.filter_by(currency = curr, user_id = id_user)
+                user_outgoings_by_currency.append({"currency": curr, "list": list(map(lambda x: x.serialize(),outgoings))})
+            
+            return jsonify(user_outgoings, currencies, user_outgoings_by_currency), 200
