@@ -82,7 +82,7 @@ def reset_password():
     user.password = generate_password_hash(new_password).decode('utf-8')
     db.session.commit()
 
-    return 200
+    return "ok", 200
     
 #-------------- crud de ingresos --------------
 
