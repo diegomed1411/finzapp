@@ -1,8 +1,10 @@
-from flask import Flask, request, jsonify, url_for, Blueprint
+import os
+from flask import Flask, request, jsonify, url_for, Blueprint, current_app
 from api.models import db, User, Outgoings, Incomes
 from api.utils import generate_sitemap, APIException
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 from flask_bcrypt import generate_password_hash, check_password_hash
+from flask_mail import Message
 
 api = Blueprint('api', __name__)
 
@@ -46,13 +48,49 @@ def login():
     access_token = create_access_token(identity=user.id)
     return jsonify(access_token=access_token)
 
+@api.route("/send_reset_password", methods=["POST"])
+def send_reset_password():
+    email = request.json.get("email", None)
+    user = User.query.filter_by(email=email).first()
+
+    if not user:
+        raise APIException('Please check the entered email and try again', status_code=404)
+    
+    token = user.get_reset_token().replace('.',"~")
+    link = f"https://3000-azure-swallow-c5iuhp2z.ws-us18.gitpod.io/reset_password/{token}"
+
+    msg = Message()
+    msg.subject = "Recupera tu contraseña"
+    msg.recipients = [email]
+    msg.sender = "finzapp"
+    msg.html = f'<p>Para recuperar tu contraseña, <a href={link}>haz click aquí</a></p>'
+    
+    current_app.mail.send(msg)
+    return "Mail sent", 200
+
+@api.route("/reset_password", methods=["PUT"])
+def reset_password():
+    token = request.json['token'].replace("~",'.')
+    user = User.verify_reset_token(token)
+    new_password = request.json['new_password']
+
+    if not new_password:
+        raise APIException("Please enter new password.", status_code=400)
+    if not user:
+        raise APIException("Invalid token.", status_code=404)
+
+    user.password = generate_password_hash(new_password).decode('utf-8')
+    db.session.commit()
+
+    return "ok", 200
+    
 #-------------- crud de ingresos --------------
 
 @api.route('/incomes', methods=['POST', 'GET'])
 @jwt_required()
 def ingresos():
     if request.method == 'POST':
-        request_body= request.json
+        request_body = request.json
         id = get_jwt_identity()
 
         if request_body is None:

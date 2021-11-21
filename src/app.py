@@ -12,11 +12,21 @@ from api.routes import api
 from api.admin import setup_admin
 from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
+from flask_mail import Mail
 
 ENV = os.getenv("FLASK_ENV")
 static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../public/')
 app = Flask(__name__)
 app.url_map.strict_slashes = False
+
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = "finzappdevelopment@gmail.com"
+app.config['MAIL_PASSWORD'] = "4Geeks2021"
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
+app.mail = mail
 
 jwt = JWTManager(app)
 bcrypt = Bcrypt(app)

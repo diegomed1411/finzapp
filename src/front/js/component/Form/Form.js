@@ -1,9 +1,9 @@
 import React from "react";
-import { any, arrayOf, shape, string } from "prop-types";
+import { any, arrayOf, func, shape, string } from "prop-types";
 
 import "./styles.scss";
 
-const Form = ({ inputsType, buttonLabel, inputs, setInputs }) => {
+const Form = ({ inputsType, buttonLabel, inputs, setInputs, onSubmit }) => {
 	return (
 		<div className="form">
 			{inputsType.map(({ label, type, placeholder, width }, index) => (
@@ -26,7 +26,7 @@ const Form = ({ inputsType, buttonLabel, inputs, setInputs }) => {
 					/>
 				</div>
 			))}
-			<button type="submit" className="btn btn-lg submit-button">
+			<button type="submit" className="btn btn-lg submit-button" onClick={onSubmit}>
 				{buttonLabel}
 			</button>
 		</div>
@@ -44,7 +44,8 @@ Form.propTypes = {
 	),
 	buttonLabel: string,
 	inputs: any,
-	setInputs: any
+	setInputs: any,
+	onSubmit: func
 };
 
 export default Form;
