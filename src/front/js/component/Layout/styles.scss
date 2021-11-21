@@ -1,0 +1,88 @@
+.layout {
+    box-sizing: border-box;
+    width: 100vw;
+    height: 100%;
+    min-height: 100vh;
+    background: rgb(222,184,65);
+    background: radial-gradient(circle, rgba(222,184,65,1) 0%, rgba(222,158,54,1) 100%);
+    padding: 24px;
+    display: flex;
+    gap: 24px;
+
+    .menu-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 17%;
+        min-width: 220px;
+        max-width: 280px;
+        background: white;
+        border-radius: 16px;
+        padding: 16px;
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+    
+            .user {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+                width: 100%;
+                background-color: rgba(222, 158, 54, 0.8);
+                border-radius: 16px;
+                padding: 16px;
+    
+                .user-info {
+                    color: white;
+                    margin: 0;
+                }
+            }
+        }
+
+        .information-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .menu-button {
+            padding-left: 16px;
+            width: 100%;
+            height: 42px;
+            border-radius: 16px;
+            transition: 0.3s;
+            cursor: pointer;
+
+            .title {
+                margin: 0;
+                color: rgba(222, 158, 54, 1);
+                transition: 0.3s;
+            }
+
+            .fa-chevron-up {
+                color: rgba(0, 128, 0, 0.6);
+            }
+
+            .fa-chevron-down {
+                color: rgba(255, 0, 0, 0.6);
+            }
+
+            &:hover {
+                background-color: rgba(222, 158, 54, 0.8);
+                .title {
+                    color: white
+                }
+            }
+        }
+    
+        .leave {
+            justify-content: center;
+        }
+    }
+
+    .layout-container {
+        width: 100%;
+    }
+}
