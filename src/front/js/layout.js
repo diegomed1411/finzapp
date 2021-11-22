@@ -8,6 +8,7 @@ import SignUp from "./pages/SignUp";
 import LogIn from "./pages/LogIn";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import injectContext from "./store/appContext";
 
@@ -34,8 +35,11 @@ const Layout = () => {
 						<Route exact path="/forgot_password">
 							<ForgotPassword />
 						</Route>
-						<Route exact path="/reset_password">
+						<Route exact path={`/reset_password/:token`}>
 							<ResetPassword />
+						</Route>
+						<Route exact path="/home">
+							<Dashboard />
 						</Route>
 						<Route exact path="/demo">
 							<Demo />

@@ -1,4 +1,4 @@
-import LogIn from "../pages/LogIn/LogIn";
+const url = "https://3001-azure-swallow-c5iuhp2z.ws-us18.gitpod.io/api";
 
 const getState = ({ getStore, getActions, setStore }) => {
 	const urlback = "https://3001-sapphire-alpaca-qpw4sfdc.ws-us18.gitpod.io/api"; // Defino url de peticion de API con 100 resultados
@@ -22,6 +22,34 @@ const getState = ({ getStore, getActions, setStore }) => {
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
+
+			sendResetPassword: email => {
+				let response;
+				fetch(`${url}/send_reset_password`, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({ email })
+				})
+					.then(resp => resp.json())
+					.then()
+					.catch();
+			},
+
+			resetPassword: (token, new_password) => {
+				fetch(`${url}/reset_password`, {
+					method: "PUT",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({ token, new_password })
+				})
+					.then(resp => resp.json())
+					.then()
+					.catch();
+			},
+
 			exampleFunction: () => {
 				getActions().changeColor(0, "green");
 			},

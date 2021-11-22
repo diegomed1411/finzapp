@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 
 import "./styles.scss";
 import Form from "../../component/Form";
+import { Context } from "../../store/appContext";
 
 const inputsType = [
 	{
@@ -14,6 +15,7 @@ const inputsType = [
 ];
 
 const ForgotPassword = () => {
+	const { actions } = useContext(Context);
 	const [inputs, setInputs] = useState({
 		email: ""
 	});
@@ -30,6 +32,7 @@ const ForgotPassword = () => {
 					inputs={inputs}
 					setInputs={setInputs}
 					buttonLabel="Enviar instrucciones"
+					onSubmit={() => actions.sendResetPassword(inputs.email)}
 				/>
 				<Link to="/">Cancelar</Link>
 			</div>

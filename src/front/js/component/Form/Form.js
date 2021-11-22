@@ -1,5 +1,5 @@
 import React from "react";
-import { any, arrayOf, shape, string } from "prop-types";
+import { any, arrayOf, func, shape, string } from "prop-types";
 
 import "./styles.scss";
 
@@ -26,7 +26,7 @@ const Form = ({ inputsType, buttonLabel, inputs, setInputs, onSubmit }) => {
 					/>
 				</div>
 			))}
-			<button onClick={onSubmit} type="submit" className="btn btn-lg submit-button">
+			<button type="submit" className="btn btn-lg submit-button" onClick={onSubmit}>
 				{buttonLabel}
 			</button>
 		</div>
@@ -45,7 +45,7 @@ Form.propTypes = {
 	buttonLabel: string,
 	inputs: any,
 	setInputs: any,
-	onSubmit: () => any
+	onSubmit: func
 };
 
 export default Form;

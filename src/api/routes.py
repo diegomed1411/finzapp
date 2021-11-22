@@ -1,8 +1,10 @@
-from flask import Flask, request, jsonify, url_for, Blueprint
+import os
+from flask import Flask, request, jsonify, url_for, Blueprint, current_app
 from api.models import db, User, Outgoings, Incomes
 from api.utils import generate_sitemap, APIException
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 from flask_bcrypt import generate_password_hash, check_password_hash
+from flask_mail import Message
 
 api = Blueprint('api', __name__)
 
@@ -46,12 +48,49 @@ def login():
     access_token = create_access_token(identity=user.id)
     return jsonify(access_token=access_token)
 
+@api.route("/send_reset_password", methods=["POST"])
+def send_reset_password():
+    email = request.json.get("email", None)
+    user = User.query.filter_by(email=email).first()
+
+    if not user:
+        raise APIException('Please check the entered email and try again', status_code=404)
+    
+    token = user.get_reset_token().replace('.',"~")
+    link = f"https://3000-azure-swallow-c5iuhp2z.ws-us18.gitpod.io/reset_password/{token}"
+
+    msg = Message()
+    msg.subject = "Recupera tu contraseña"
+    msg.recipients = [email]
+    msg.sender = "finzapp"
+    msg.html = f'<p>Para recuperar tu contraseña, <a href={link}>haz click aquí</a></p>'
+    
+    current_app.mail.send(msg)
+    return "Mail sent", 200
+
+@api.route("/reset_password", methods=["PUT"])
+def reset_password():
+    token = request.json['token'].replace("~",'.')
+    user = User.verify_reset_token(token)
+    new_password = request.json['new_password']
+
+    if not new_password:
+        raise APIException("Please enter new password.", status_code=400)
+    if not user:
+        raise APIException("Invalid token.", status_code=404)
+
+    user.password = generate_password_hash(new_password).decode('utf-8')
+    db.session.commit()
+
+    return "ok", 200
+    
+#-------------- crud de ingresos --------------
 
 @api.route('/incomes', methods=['POST', 'GET'])
 @jwt_required()
 def ingresos():
     if request.method == 'POST':
-        request_body= request.json
+        request_body = request.json
         id = get_jwt_identity()
 
         if request_body is None:
@@ -71,7 +110,7 @@ def ingresos():
         else:
             description = request_body['description']
 
-        ingreso= Incomes(user_id=id, type=request_body['type'], subtype=request_body['subtype'], currency=request_body['currency'], description=description, date=request_body['date'], amount=request_body['amount'])
+        ingreso= Incomes(user_id=id, type=request_body['type'], subtype=request_body['subtype'], currency=request_body['currency'].upper(), description=description, date=request_body['date'], amount=request_body['amount'])
         db.session.add(ingreso)
         db.session.commit()
         #listamos en json todos los ingresos
@@ -216,3 +255,49 @@ def get_outgoing(id):
 
 
 
+@api.route('/summaryinc', methods=['GET'])
+@jwt_required()
+def get_ingresos_usuario():
+    id_user= get_jwt_identity()
+    if request.method == 'GET':
+        body=request.json
+        user_incomes =Incomes.query.filter_by(user_id= id_user)
+        user_incomes=list(map(lambda x: x.serialize(),user_incomes))
+        currencies = []
+        user_incomes_by_currency =[]
+        if user_incomes is None:
+            raise APIException('El usuario no tiene ingresos registrados', status_code=404)
+        else:
+            for income in user_incomes:
+                if income['currency'].upper() not in currencies:
+                    currencies.append(income['currency'].upper())
+            
+            for curr in currencies:
+                incomes = Incomes.query.filter_by(currency = curr, user_id = id_user)
+                user_incomes_by_currency.append({"currency": curr, "list": list(map(lambda x: x.serialize(),incomes))})
+            
+            return jsonify(user_incomes, currencies, user_incomes_by_currency), 200
+
+@api.route('/summaryout', methods=['GET'])
+#@jwt_required()
+def get_egresos_usuario():
+    #id_user= get_jwt_identity()
+    id_user= 1
+    if request.method == 'GET':
+        body=request.json
+        user_outgoings =Outgoings.query.filter_by(user_id= id_user)
+        user_outgoings=list(map(lambda x: x.serialize(),user_outgoings))
+        currencies = []
+        user_outgoings_by_currency =[]
+        if user_outgoings is None:
+            raise APIException('El usuario no tiene egresos registrados', status_code=404)
+        else:
+            for outgoing in user_outgoings:
+                if outgoing['currency'].upper() not in currencies:
+                    currencies.append(outgoing['currency'].upper())
+            
+            for curr in currencies:
+                outgoings = Outgoings.query.filter_by(currency = curr, user_id = id_user)
+                user_outgoings_by_currency.append({"currency": curr, "list": list(map(lambda x: x.serialize(),outgoings))})
+            
+            return jsonify(user_outgoings, currencies, user_outgoings_by_currency), 200
