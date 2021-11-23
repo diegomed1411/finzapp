@@ -99,6 +99,18 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(result => setStore({ userIncomes: result }));
 			},
 
+			getUserOutgoings: () => {
+				fetch(`${urlback}/summaryout`, {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: "Bearer" + localStorage.getItem("jwt-token")
+					}
+				})
+					.then(response => response.json())
+					.then(result => setStore({ userIncomes: result }));
+			},
+
 			getMessage: () => {
 				// fetching data from the backend
 				fetch(process.env.BACKEND_URL + "/api/hello")
