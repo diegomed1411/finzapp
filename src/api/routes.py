@@ -1,4 +1,4 @@
-oimport os
+import os
 from flask import Flask, request, jsonify, url_for, Blueprint, current_app
 from api.models import db, User, Outgoings, Incomes
 from api.utils import generate_sitemap, APIException
