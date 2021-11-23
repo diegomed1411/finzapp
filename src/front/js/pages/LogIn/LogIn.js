@@ -1,9 +1,9 @@
 import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import { Context } from "../../store/appContext";
 
 import "./styles.scss";
 import Form from "../../component/Form";
+import { Context } from "../../store/appContext";
 
 const inputsType = [
 	{

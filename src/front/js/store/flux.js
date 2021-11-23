@@ -1,7 +1,5 @@
-const url = "https://3001-azure-swallow-c5iuhp2z.ws-us18.gitpod.io/api";
-
 const getState = ({ getStore, getActions, setStore }) => {
-	const urlback = "https://3001-sapphire-alpaca-qpw4sfdc.ws-us18.gitpod.io/api"; // Defino url de peticion de API con 100 resultados
+	const urlback = "https://3001-coffee-amphibian-7tw66dph.ws-us17.gitpod.io/api"; // Defino url de peticion de API con 100 resultados
 
 	return {
 		store: {
@@ -18,14 +16,21 @@ const getState = ({ getStore, getActions, setStore }) => {
 					initial: "white"
 				}
 			],
-			user: {}
+			user: {
+				name: "",
+				lastname: "",
+				email: "",
+				id: ""
+			},
+
+			userIncomes: {}
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
 
 			sendResetPassword: email => {
 				let response;
-				fetch(`${url}/send_reset_password`, {
+				fetch(`${urlback}/send_reset_password`, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json"
@@ -38,7 +43,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			resetPassword: (token, new_password) => {
-				fetch(`${url}/reset_password`, {
+				fetch(`${urlback}/reset_password`, {
 					method: "PUT",
 					headers: {
 						"Content-Type": "application/json"
@@ -48,10 +53,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(resp => resp.json())
 					.then()
 					.catch();
-			},
-
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
 			},
 
 			signin: (email, password) => {
@@ -70,6 +71,32 @@ const getState = ({ getStore, getActions, setStore }) => {
 						}
 					})
 					.catch(error => console.log("error", error));
+			},
+
+			signup: (name, lastname, email, password, repeat_password) => {
+				const data = { name, lastname, email, password, repeat_password };
+				fetch(`${urlback}/signup`, {
+					method: "POST",
+					body: JSON.stringify(data),
+					headers: { "Content-Type": "application/json" }
+				})
+					.then(response => response.json())
+					.then(result => {
+						alert("hola");
+					})
+					.catch(error => console.log("error", error));
+			},
+
+			getUserIncomes: () => {
+				fetch(`${urlback}/summaryinc`, {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: "Bearer" + localStorage.getItem("jwt-token")
+					}
+				})
+					.then(response => response.json())
+					.then(result => setStore({ userIncomes: result }));
 			},
 
 			getMessage: () => {
