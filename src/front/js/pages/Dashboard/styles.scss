@@ -1,0 +1,49 @@
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    .information-container {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        background-color: white;
+        border-radius: 16px;
+        padding: 24px;
+
+        .title {
+            font-weight: bold;
+            font-size: 42px;
+            color: #de9e36;
+        }
+
+        .side-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .button {
+            width: 220px;
+            background-color: #deb841;
+            transition: 0.2s;
+        
+            &:hover {
+                background-color: #de9e36;
+            }
+
+        }
+
+        .value {
+            font-size: 98px;
+        }
+    }
+
+    .bottom-container {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        gap: 24px;
+    }
+}
