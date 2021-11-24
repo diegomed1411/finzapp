@@ -11,6 +11,12 @@
         border-radius: 16px;
         padding: 24px;
 
+        &.column {
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
         .title {
             font-weight: bold;
             font-size: 42px;
@@ -28,6 +34,10 @@
             width: 220px;
             background-color: #deb841;
             transition: 0.2s;
+
+            &.curr {
+                width: 100%;
+            }
         
             &:hover {
                 background-color: #de9e36;
@@ -45,5 +55,19 @@
         justify-content: space-around;
         align-items: center;
         gap: 24px;
+    }
+
+    .currencies {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .value-container {
+        display: flex;
+        gap: 24px;
+        align-items: center;
     }
 }
