@@ -1,10 +1,10 @@
 import React from "react";
-import { any } from "prop-types";
+import { any, string } from "prop-types";
 
 import "./styles.scss";
 import { Link } from "react-router-dom";
 
-const Layout = ({ children }) => {
+const Layout = ({ children, path }) => {
 	return (
 		<div className="layout">
 			<nav className="menu-container">
@@ -17,19 +17,19 @@ const Layout = ({ children }) => {
 						<h6 className="user-info">useremail@mail.com</h6>
 					</section>
 					<Link to="/home" style={{ textDecoration: "none" }}>
-						<div className="menu-button information-row">
+						<div className={`menu-button information-row ${path === "dashboard" ? "is-active" : ""}`}>
 							<i className="fas fa-chart-pie title user-info" />
 							<h5 className="title">Dashboard</h5>
 						</div>
 					</Link>
 					<Link to="/incomes" style={{ textDecoration: "none" }}>
-						<div className="menu-button information-row">
+						<div className={`menu-button information-row ${path === "incomes" ? "is-active" : ""}`}>
 							<i className="fas fa-chevron-up title user-info" />
 							<h5 className="title">Ingresos</h5>
 						</div>
 					</Link>
 					<Link to="/outgoings" style={{ textDecoration: "none" }}>
-						<div className="menu-button information-row">
+						<div className={`menu-button information-row ${path === "outgoings" ? "is-active" : ""}`}>
 							<i className="fas fa-chevron-down title" />
 							<h5 className="title">Egresos</h5>
 						</div>
@@ -46,7 +46,8 @@ const Layout = ({ children }) => {
 };
 
 Layout.propTypes = {
-	children: any
+	children: any,
+	path: string
 };
 
 export default Layout;
