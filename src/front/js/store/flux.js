@@ -23,7 +23,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 				id: ""
 			},
 
-			userIncomes: {}
+			userIncomes: [],
+			userOutgoings: [],
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -108,8 +109,24 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 				})
 					.then(response => response.json())
-					.then(result => setStore({ userIncomes: result }));
+					.then(result => setStore({ userOutgoings: result }));
 			},
+
+			deleteIncomes: (id) => {
+				fetch(`${urlback}/'/incomes/<int:${id}>'`, {
+					method: "DELETE",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: "Bearer" + localStorage.getItem("jwt-token")						
+					}
+					})
+						.then(response => response.json())
+						.then(result => {setStore({ userIncomes: result })
+						})
+						.catch(error => console.log("error", error))
+			},
+
+
 
 			getMessage: () => {
 				// fetching data from the backend
