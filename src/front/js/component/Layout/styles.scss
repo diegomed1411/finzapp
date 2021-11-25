@@ -75,6 +75,13 @@
                     color: white
                 }
             }
+
+            &.is-active {
+                background-color: rgba(222, 158, 54, 0.8);
+                .title {
+                    color: white
+                }
+            }
         }
     
         .leave {

@@ -1,0 +1,33 @@
+.table {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.header {
+    display: flex;
+    width: 100%;
+    border-radius: 16px;
+    padding: 0 16px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.table-row {
+    display: flex;
+    width: 100%;
+    background-color: white;
+    border-radius: 16px;
+    padding: 16px;
+}
+
+.cell {
+    width: calc(100% /6);
+    text-align: center;
+    border-left: solid rgba(128, 128, 128, 0.45) 2px;
+
+    &:first-child {
+        border: none
+    }
+}

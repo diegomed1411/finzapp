@@ -23,7 +23,7 @@ const Dashboard = () => {
 	// }, []);
 
 	return (
-		<Layout>
+		<Layout path="dashboard">
 			<div className="dashboard">
 				<div className="information-container">
 					<div className="side-container">
@@ -83,10 +83,16 @@ const Dashboard = () => {
 						<div className="value-container">
 							<h1 className="value">{difference}</h1>
 							<div className="currencies">
-								<button type="submit" className="btn btn-sm button curr" onClick={() => setDifference()}>
+								<button
+									type="submit"
+									className="btn btn-sm button curr"
+									onClick={() => setDifference()}>
 									USD
 								</button>
-								<button type="submit" className="btn btn-sm button curr" onClick={() => setDifference()}>
+								<button
+									type="submit"
+									className="btn btn-sm button curr"
+									onClick={() => setDifference()}>
 									UYU
 								</button>
 							</div>
