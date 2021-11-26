@@ -40,13 +40,13 @@ def signup_post():
 def login():
     email = request.json.get("email", None)
     password = request.json.get("password", None)
-    
+
     user = User.query.filter_by(email = email).first()
     if not user or not check_password_hash(user.password, password):
         raise APIException('Please check your login details and try again.', status_code=400)
-
     access_token = create_access_token(identity=user.id)
     return jsonify(access_token=access_token)
+
 
 @api.route("/send_reset_password", methods=["POST"])
 def send_reset_password():
@@ -128,6 +128,7 @@ def ingresos():
 @api.route('/incomes/<int:id>', methods=['GET', 'DELETE', 'PUT'])
 @jwt_required()
 def get_income(id):
+    id_user= get_jwt_identity()
     if request.method == 'GET':
         body=request.json
         income=Incomes.query.get(id)
@@ -143,7 +144,10 @@ def get_income(id):
         else:
             db.session.delete(income)
             db.session.commit()
-            return jsonify(income.serialize()), 200
+            user_incomes=Incomes.query.filter_by(user_id= id_user)
+            user_incomes=list(map(lambda x: x.serialize(),user_incomes))
+            #devolver todos los incomes del usuario
+            return jsonify(user_incomes), 200
     
     if request.method == 'PUT':
         body=request.json
@@ -212,6 +216,7 @@ def egresos():
 @api.route('/outgoings/<int:id>', methods=['GET', 'DELETE', 'PUT'])
 @jwt_required()
 def get_outgoing(id):
+    id_user= get_jwt_identity()
     if request.method == 'GET':
         body=request.json
         outgoing=Outgoings.query.get(id)
@@ -227,7 +232,9 @@ def get_outgoing(id):
         else:
             db.session.delete(outgoing)
             db.session.commit()
-            return jsonify(outgoing.serialize()), 200
+            all_outgoings=Outgoings.query.all()
+            all_outgoings=list(map(lambda x: x.serialize(),all_outgoings))
+            return jsonify(all_outgoings), 200
 
     
     if request.method == 'PUT':

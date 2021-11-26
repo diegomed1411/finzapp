@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 
 import "./styles.scss";
 import Form from "../../component/Form";
+import { Context } from "../../store/appContext";
 
 const inputsType = [
 	{
@@ -38,6 +39,7 @@ const inputsType = [
 ];
 
 const SignUp = () => {
+	const { actions } = useContext(Context);
 	const [inputs, setInputs] = useState({
 		name: "",
 		lastname: "",
@@ -50,7 +52,21 @@ const SignUp = () => {
 		<div className="sign-up">
 			<div className="form-container">
 				<h2 className="title">Crea una cuenta gratis y gestiona tus finanzas</h2>
-				<Form inputsType={inputsType} inputs={inputs} setInputs={setInputs} buttonLabel="Crear cuenta" />
+				<Form
+					inputsType={inputsType}
+					inputs={inputs}
+					setInputs={setInputs}
+					onSubmit={() =>
+						actions.signup(
+							inputs.name,
+							inputs.lastname,
+							inputs.email,
+							inputs.password,
+							inputs.repeatPassword
+						)
+					}
+					buttonLabel="Crear cuenta"
+				/>
 				<div>
 					{"¿Ya estas registrado? "}
 					<Link to="/login">Haz click aquí.</Link>

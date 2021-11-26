@@ -1,6 +1,6 @@
-const url = "https://3001-azure-swallow-c5iuhp2z.ws-us18.gitpod.io/api";
-
 const getState = ({ getStore, getActions, setStore }) => {
+	const urlback = "https://3001-coffee-amphibian-7tw66dph.ws-us17.gitpod.io/api"; // Defino url de peticion de API con 100 resultados
+
 	return {
 		store: {
 			message: null,
@@ -15,14 +15,23 @@ const getState = ({ getStore, getActions, setStore }) => {
 					background: "white",
 					initial: "white"
 				}
-			]
+			],
+			user: {
+				name: "",
+				lastname: "",
+				email: "",
+				id: ""
+			},
+
+			userIncomes: [],
+			userOutgoings: [],
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
 
 			sendResetPassword: email => {
 				let response;
-				fetch(`${url}/send_reset_password`, {
+				fetch(`${urlback}/send_reset_password`, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json"
@@ -35,7 +44,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			resetPassword: (token, new_password) => {
-				fetch(`${url}/reset_password`, {
+				fetch(`${urlback}/reset_password`, {
 					method: "PUT",
 					headers: {
 						"Content-Type": "application/json"
@@ -47,9 +56,77 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.catch();
 			},
 
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
+			signin: (email, password) => {
+				const data = { email, password };
+				fetch(`${urlback}/login`, {
+					method: "POST",
+					body: JSON.stringify(data),
+					headers: { "Content-Type": "application/json" }
+				})
+					.then(response => response.json())
+					.then(result => {
+						if (result.access_token) {
+							localStorage.setItem("jwt-token", result.access_token);
+						} else if (result.message) {
+							alert(result.message);
+						}
+					})
+					.catch(error => console.log("error", error));
 			},
+
+			signup: (name, lastname, email, password, repeat_password) => {
+				const data = { name, lastname, email, password, repeat_password };
+				fetch(`${urlback}/signup`, {
+					method: "POST",
+					body: JSON.stringify(data),
+					headers: { "Content-Type": "application/json" }
+				})
+					.then(response => response.json())
+					.then(result => {
+						alert("hola");
+					})
+					.catch(error => console.log("error", error));
+			},
+
+			getUserIncomes: () => {
+				fetch(`${urlback}/summaryinc`, {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: "Bearer" + localStorage.getItem("jwt-token")
+					}
+				})
+					.then(response => response.json())
+					.then(result => setStore({ userIncomes: result }));
+			},
+
+			getUserOutgoings: () => {
+				fetch(`${urlback}/summaryout`, {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: "Bearer" + localStorage.getItem("jwt-token")
+					}
+				})
+					.then(response => response.json())
+					.then(result => setStore({ userOutgoings: result }));
+			},
+
+			deleteIncomes: (id) => {
+				fetch(`${urlback}/'/incomes/<int:${id}>'`, {
+					method: "DELETE",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: "Bearer" + localStorage.getItem("jwt-token")						
+					}
+					})
+						.then(response => response.json())
+						.then(result => {setStore({ userIncomes: result })
+						})
+						.catch(error => console.log("error", error))
+			},
+
+
 
 			getMessage: () => {
 				// fetching data from the backend
