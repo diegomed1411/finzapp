@@ -1,19 +1,23 @@
 import React from "react";
-import { any, number, shape, string } from "prop-types";
+import { func, number, shape, string } from "prop-types";
+import moment from "moment";
 
 import "./styles.scss";
 
-const Row = ({ data }) => {
-	const { name, type, subtype, date, amount, currency, id } = data;
+const Row = ({ data, handleDelete, handleEdit }) => {
+	const { type, subtype, date, amount, currency, id } = data;
 
 	return (
 		<div className="table-row">
-			<div className="cell">{name}</div>
 			<div className="cell">{type}</div>
 			<div className="cell">{subtype}</div>
 			<div className="cell">{amount}</div>
 			<div className="cell">{currency}</div>
-			<div className="cell">{date}</div>
+			<div className="cell">{moment(date).format("MM/DD/YYYY")}</div>
+			<div className="cell">
+				<i className="far fa-edit" onClick={() => handleEdit(id)} />
+				<i className="far fa-trash-alt" onClick={() => handleDelete(id)} />
+			</div>
 		</div>
 	);
 };
@@ -29,5 +33,7 @@ Row.propTypes = {
 		amount: number,
 		currency: string,
 		id: number
-	})
+	}),
+	handleEdit: func,
+	handleDelete: func
 };
