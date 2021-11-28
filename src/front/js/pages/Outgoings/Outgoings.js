@@ -8,16 +8,17 @@ const Outgoings = () => {
 	const { actions, store } = useContext(Context);
 
 	useEffect(() => {
-		!store.userOutgoings.length && actions.getUserOutgoings();
+		!store.userOutgoings && actions.getUserOutgoings();
 	}, []);
 
 	return (
 		<Layout path="outgoings">
 			<div className="outgoings">
 				{store.userOutgoings.length ? (
-					<Table movements={store.userOutgoings} 
-					handleDelete={id => actions.deleteOutcome(id)}
-					handleEdit={id => console.log(id)} //TODO: integrate edit
+					<Table
+						movements={store.userOutgoings}
+						handleDelete={id => actions.deleteOutcome(id)}
+						handleEdit={id => console.log(id)} //TODO: integrate edit
 					/>
 				) : (
 					<p>Lo sentimos, de momento no hay egresos.</p>
