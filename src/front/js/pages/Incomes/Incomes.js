@@ -8,7 +8,7 @@ const Incomes = () => {
 	const { actions, store } = useContext(Context);
 
 	useEffect(() => {
-		!store.userIncomes.length && actions.getUserIncomes();
+		!store.userIncomes && actions.getUserIncomes();
 	}, []);
 
 	return (
