@@ -133,15 +133,31 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			getUserIncomesUSD: () =>{
 				let incomes = getUserIncomes();
-				let USDincomes;
+				let USDincomes = [];
 				let exchangeRate = exchangeRate();
-				incomes.incomes.forEach(element => {
-					if (element.currency == "UYU") {
-						element.currency = "USD";
-						element.amount = element.amount / exchangeRate;
+				for (let i=0; i<incomes.incomes.length; i++){
+				if (incomes.incomes[i].currency == "UYU"){
+					USDincomes.push({
+						"amount": (incomes.incomes[i].amount/exchangeRate).toFixed(2),
+						"currency": "USD",
+						"date": incomes.incomes[i].date,
+						"description": incomes.incomes[i].description,
+						"id": incomes.incomes[i].id,
+						"subtype": incomes.incomes[i].subtype,
+						"type": incomes.incomes[i].type,
+						"user_id": incomes.incomes[i].user_id})	
 
-					}
-				});
+				} else {					
+						USDincomes.push(incomes.incomes[i])					
+				}
+				return {userIncomesUSD: USDincomes};
+			}
+
+			totalUserUSDIncomes: () =>{
+				let USDIncomes = getUserIncomesUSD()
+
+
+			}
 
 			},
 
