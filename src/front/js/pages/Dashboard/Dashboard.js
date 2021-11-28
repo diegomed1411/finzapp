@@ -12,14 +12,14 @@ const Dashboard = () => {
 	const [outgoings, setOutgoings] = useState();
 	const [difference, setDifference] = useState();
 
-	// useEffect(() => {
-	// 	!store.userIncomes && actions.getUserIncomes();
-	// 	!store.userOutgoings && actions.getUserOutgoings();
+	useEffect(() => {
+		!store.userIncomes.length && actions.getUserIncomes();
+		!store.userOutgoings.length && actions.getUserOutgoings();
 
-	// 	setIncomes(store.incomesTotal);
-	// 	setOutgoings(store.outgoingsTotal);
-	// 	setDifference(store.incomesTotal - store.outgoingsTotal);
-	// }, []);
+		// setIncomes(store.incomesTotal);
+		// setOutgoings(store.outgoingsTotal);
+		// setDifference(store.incomesTotal - store.outgoingsTotal);
+	}, []);
 
 	return (
 		<Layout path="dashboard">

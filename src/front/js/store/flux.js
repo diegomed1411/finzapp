@@ -1,4 +1,5 @@
 const getState = ({ getStore, getActions, setStore }) => {
+
 	const urlback = "https://3001-coffee-amphibian-7tw66dph.ws-us17.gitpod.io/api"; // Defino url de peticion de API con 100 resultados
 	const urlapi = "http://api.currencylayer.com/live?access_key=a3f96353a3db8d1757a469f86fa0160b&format=1";
 
@@ -23,10 +24,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 				email: "",
 				id: ""
 			},
-
+			isLoggedIn: false,
 			userIncomes: [],
+			incomesUSD: 0,
 			userOutgoings: [],
-			exchangeRate: {}
+			exchangeRate: {},
+			outgoingsUSD: 0
+
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -44,7 +48,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			sendResetPassword: email => {
 				let response;
-				fetch(`${urlback}/send_reset_password`, {
+				fetch(`${process.env.BACKEND_URL}/send_reset_password`, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json"
@@ -52,12 +56,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 					body: JSON.stringify({ email })
 				})
 					.then(resp => resp.json())
-					.then()
+					.then(result => {
+						if (result.message) alert(result.message);
+					})
 					.catch();
 			},
 
 			resetPassword: (token, new_password) => {
-				fetch(`${urlback}/reset_password`, {
+				fetch(`${process.env.BACKEND_URL}/reset_password`, {
 					method: "PUT",
 					headers: {
 						"Content-Type": "application/json"
@@ -65,13 +71,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 					body: JSON.stringify({ token, new_password })
 				})
 					.then(resp => resp.json())
-					.then()
+					.then(result => {
+						if (result.message) alert(result.message);
+					})
 					.catch();
 			},
 
-			signin: (email, password) => {
+			login: (email, password) => {
 				const data = { email, password };
-				fetch(`${urlback}/login`, {
+				fetch(`${process.env.BACKEND_URL}/login`, {
 					method: "POST",
 					body: JSON.stringify(data),
 					headers: { "Content-Type": "application/json" }
@@ -89,77 +97,88 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			signup: (name, lastname, email, password, repeat_password) => {
 				const data = { name, lastname, email, password, repeat_password };
-				fetch(`${urlback}/signup`, {
+				fetch(`${process.env.BACKEND_URL}/signup`, {
 					method: "POST",
 					body: JSON.stringify(data),
 					headers: { "Content-Type": "application/json" }
 				})
 					.then(response => response.json())
 					.then(result => {
-						alert("hola");
+						if (result.message) {
+							alert(result.message);
+						}
 					})
 					.catch(error => console.log("error", error));
 			},
 
 			getUserIncomes: () => {
-				fetch(`${urlback}/summaryinc`, {
+				fetch(`${process.env.BACKEND_URL}/summaryinc`, {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: "Bearer" + localStorage.getItem("jwt-token")
-					}
-				})
-					.then(response => response.json())
-					.then(result => setStore({ userIncomes: result }));
-			},
-
-			getUserOutgoings: () => {
-				fetch(`${urlback}/summaryout`, {
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: "Bearer" + localStorage.getItem("jwt-token")
-					}
-				})
-					.then(response => response.json())
-					.then(result => setStore({ userOutgoings: result }));
-			},
-
-			deleteIncomes: id => {
-				fetch(`${urlback}/'/incomes/<int:${id}>'`, {
-					method: "DELETE",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: "Bearer" + localStorage.getItem("jwt-token")
+						Authorization: "Bearer " + localStorage.getItem("jwt-token")
 					}
 				})
 					.then(response => response.json())
 					.then(result => {
-						setStore({ userIncomes: result });
+						if (result.message) {
+							alert(result.message);
+						} else setStore({ userIncomes: result.incomes });
+					});
+			},
+
+			getUserOutgoings: () => {
+				fetch(`${process.env.BACKEND_URL}/summaryout`, {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: "Bearer " + localStorage.getItem("jwt-token")
+					}
+				})
+					.then(response => response.json())
+					.then(result => {
+						if (result.message) {
+							alert(result.message);
+						} else setStore({ userOutgoings: result.outgoings });
+					});
+			},
+
+
+			deleteIncome: id => {
+				fetch(`${process.env.BACKEND_URL}/incomes/${id}`, {
+					method: "DELETE",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: "Bearer " + localStorage.getItem("jwt-token")
+
+					}
+				})
+					.then(response => response.json())
+					.then(result => {
+
+						if (result.message) {
+							alert(result.message);
+						} else setStore({ userIncomes: result });
 					})
 					.catch(error => console.log("error", error));
+
 			},
 
-			getMessage: () => {
-				// fetching data from the backend
-				fetch(process.env.BACKEND_URL + "/api/hello")
-					.then(resp => resp.json())
-					.then(data => setStore({ message: data.message }))
-					.catch(error => console.log("Error loading message from backend", error));
-			},
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
-
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
-
-				//reset the global store
-				setStore({ demo: demo });
+			deleteOutgoing: id => {
+				fetch(`${process.env.BACKEND_URL}/outgoings/${id}`, {
+					method: "DELETE",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: "Bearer " + localStorage.getItem("jwt-token")
+					}
+				})
+					.then(response => response.json())
+					.then(result => {
+						if (result.message) {
+							alert(result.message);
+						} else setStore({ userOutgoings: result });
+					})
+					.catch(error => console.log("error", error));
 			}
 		}
 	};
