@@ -1,26 +1,28 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect } from "react";
 
 import Layout from "../../component/Layout/Layout";
 import Table from "../../component/Table/Table";
-
-const incomes = [
-	//delete when back finishes
-	{
-		name: "test",
-		type: "test",
-		subtype: "test",
-		amount: 719,
-		currency: "test",
-		date: "2-2-2",
-		id: 0
-	}
-];
+import { Context } from "../../store/appContext";
 
 const Incomes = () => {
+	const { actions, store } = useContext(Context);
+
+	useEffect(() => {
+		!store.userIncomes.length && actions.getUserIncomes();
+	}, []);
+
 	return (
 		<Layout path="incomes">
 			<div className="incomes">
-				<Table movements={incomes} />
+				{store.userIncomes.length ? (
+					<Table
+						movements={store.userIncomes}
+						handleDelete={id => actions.deleteIncome(id)}
+						handleEdit={id => console.log(id)} //TODO: integrate edit
+					/>
+				) : (
+					<p>Lo sentimos, de momento no hay ingresos.</p>
+				)}
 			</div>
 		</Layout>
 	);

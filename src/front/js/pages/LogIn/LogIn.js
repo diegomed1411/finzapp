@@ -28,7 +28,7 @@ const LogIn = () => {
 	});
 
 	const login = () => {
-		actions.signin(inputs.email, inputs.password);
+		actions.login(inputs.email, inputs.password);
 	};
 
 	return (
