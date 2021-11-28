@@ -1,5 +1,6 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	const urlback = "https://3001-coffee-amphibian-7tw66dph.ws-us17.gitpod.io/api"; // Defino url de peticion de API con 100 resultados
+	const urlapi = "http://api.currencylayer.com/live?access_key=a3f96353a3db8d1757a469f86fa0160b&format=1";
 
 	return {
 		store: {
@@ -24,10 +25,22 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			userIncomes: [],
-			userOutgoings: []
+			userOutgoings: [],
+			exchangeRate: {}
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
+
+			getUserIncomes: () => {
+				fetch(`${urlapi}`, {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json"
+					}
+				})
+					.then(response => response.json())
+					.then(result => setStore({ exchangeRate: result }));
+			},
 
 			sendResetPassword: email => {
 				let response;

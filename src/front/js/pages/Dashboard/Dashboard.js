@@ -4,8 +4,6 @@ import { Link } from "react-router-dom";
 import "./styles.scss";
 import Layout from "../../component/Layout/Layout";
 import { Context } from "../../store/appContext";
-import { Modal, Button } from "bootstrap";
-
 const Dashboard = () => {
 	const { actions, store } = useContext(Context);
 	const [incomeModal, setIncomeModal] = useState();
@@ -22,9 +20,6 @@ const Dashboard = () => {
 	// 	setOutgoings(store.outgoingsTotal);
 	// 	setDifference(store.incomesTotal - store.outgoingsTotal);
 	// }, []);
-	const [show, setShow] = useState(false);
-	const handleClose = () => setShow(false);
-	const handleShow = () => setShow(true);
 
 	return (
 		<Layout path="dashboard">
@@ -108,27 +103,6 @@ const Dashboard = () => {
 					</div>
 				</div>
 			</div>
-
-			<>
-				<Button variant="primary" onClick={handleShow}>
-					Launch demo modal
-				</Button>
-
-				<Modal show={show} onHide={handleClose}>
-					<Modal.Header closeButton>
-						<Modal.Title>Modal heading</Modal.Title>
-					</Modal.Header>
-					<Modal.Body>Woohoo, youre reading this text in a modal!</Modal.Body>
-					<Modal.Footer>
-						<Button variant="secondary" onClick={handleClose}>
-							Close
-						</Button>
-						<Button variant="primary" onClick={handleClose}>
-							Save Changes
-						</Button>
-					</Modal.Footer>
-				</Modal>
-			</>
 		</Layout>
 	);
 };
