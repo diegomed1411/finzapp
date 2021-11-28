@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, jsonify, url_for, Blueprint, current_app
+from flask import Flask, request, jsonify, url_for, Blueprint, current_app, redirect, url_for
 from api.models import db, User, Outgoings, Incomes
 from api.utils import generate_sitemap, APIException
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required

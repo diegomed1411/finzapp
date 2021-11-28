@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import "./styles.scss";
 import Layout from "../../component/Layout/Layout";
 import { Context } from "../../store/appContext";
-
 const Dashboard = () => {
 	const { actions, store } = useContext(Context);
 	const [incomeModal, setIncomeModal] = useState();
@@ -28,7 +27,11 @@ const Dashboard = () => {
 				<div className="information-container">
 					<div className="side-container">
 						<h1 className="title m-0">Ingresos</h1>
-						<button onClick={() => setIncomeModal(true)} type="submit" className="btn btn-lg button">
+						<button
+							type="submit"
+							className="btn btn-lg button"
+							data-bs-toggle="modal"
+							data-bs-target="#newIncomeModal">
 							Nuevo Ingreso
 						</button>
 						<Link to="/incomes">
