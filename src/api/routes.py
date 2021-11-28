@@ -169,8 +169,10 @@ def get_income(id):
                 income.amount = body["amount"]
             db.session.commit()        
         #income = Incomes.query.get(id)
-            income = income.serialize()
-        return jsonify(income), 200
+            user_incomes=Incomes.query.filter_by(user_id= id_user)
+            user_incomes=list(map(lambda x: x.serialize(),user_incomes))
+            #devolver todos los incomes del usuario
+            return jsonify(user_incomes), 200
 
 #-------------------------crud de egresos-------------------------------------
 
@@ -258,7 +260,11 @@ def get_outgoing(id):
             db.session.commit()        
         #outgoing = Outgoings.query.get(id)
             outgoing = outgoing.serialize()
-        return jsonify(outgoing), 200
+        #listamos en json todos los egresos
+        all_outgoings=Outgoings.query.all()
+        all_outgoings=list(map(lambda x: x.serialize(),all_outgoings))
+    
+        return jsonify(all_outgoings), 200
 
 
 
