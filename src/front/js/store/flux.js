@@ -1,5 +1,4 @@
 const getState = ({ getStore, getActions, setStore }) => {
-
 	const urlback = "https://3001-coffee-amphibian-7tw66dph.ws-us17.gitpod.io/api"; // Defino url de peticion de API con 100 resultados
 	const urlapi = "http://api.currencylayer.com/live?access_key=a3f96353a3db8d1757a469f86fa0160b&format=1";
 
@@ -28,15 +27,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 			userIncomes: undefined,
 			incomesUSD: 0,
 			userOutgoings: [],
-			exchangeRate: {},
+			exchangeRate: undefined,
 			userOutgoings: undefined,
 			outgoingsUSD: 0
-
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
 
-			getUserIncomes: () => {
+			getRate: () => {
 				fetch(`${urlapi}`, {
 					method: "GET",
 					headers: {
@@ -44,7 +42,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 				})
 					.then(response => response.json())
-					.then(result => setStore({ exchangeRate: result }));
+					.then(result => setStore({ exchangeRate: result.quotes.USDUYU }));
 			},
 
 			sendResetPassword: email => {
@@ -149,19 +147,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			},
 
-
 			deleteIncome: id => {
 				fetch(`${process.env.BACKEND_URL}/api/incomes/${id}`, {
 					method: "DELETE",
 					headers: {
 						"Content-Type": "application/json",
 						Authorization: "Bearer " + localStorage.getItem("jwt-token")
-
 					}
 				})
 					.then(response => response.json())
 					.then(result => {
-
 						if (result.message) {
 							alert(result.message);
 						} else setStore({ userIncomes: result });
