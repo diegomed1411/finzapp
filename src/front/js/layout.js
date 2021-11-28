@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 
@@ -12,10 +12,20 @@ import Dashboard from "./pages/Dashboard";
 import Incomes from "./pages/Incomes";
 import Outgoings from "./pages/Outgoings";
 import NotFound from "./pages/NotFound";
-import injectContext from "./store/appContext";
+import injectContext, { Context } from "./store/appContext";
 
 //create your first component
 const Layout = () => {
+	const { store } = useContext(Context);
+
+	const PrivateRoute = ({ children: Component, ...rest }) => {
+		return <Route {...rest}>{store.isLoggedIn ? Component : <Redirect to="/signup" />}</Route>;
+	};
+
+	const PublicRoute = ({ children: Component, ...rest }) => {
+		return <Route {...rest}>{store.isLoggedIn ? <Redirect to="/home" /> : Component}</Route>;
+	};
+
 	//the basename is used when your project is published in a subdirectory and not in the root of the domain
 	// you can set the basename on the .env file located at the root of this project, E.g: BASENAME=/react-hello-webapp/
 	const basename = process.env.BASENAME || "";
@@ -28,27 +38,27 @@ const Layout = () => {
 						<Route exact path="/">
 							<Redirect to="/signup" />
 						</Route>
-						<Route exact path="/signup">
+						<PublicRoute exact path="/signup">
 							<SignUp />
-						</Route>
-						<Route exact path="/login">
+						</PublicRoute>
+						<PublicRoute exact path="/login">
 							<LogIn />
-						</Route>
+						</PublicRoute>
 						<Route exact path="/forgot_password">
 							<ForgotPassword />
 						</Route>
 						<Route exact path={`/reset_password/:token`}>
 							<ResetPassword />
 						</Route>
-						<Route exact path="/home">
+						<PrivateRoute exact path="/home">
 							<Dashboard />
-						</Route>
-						<Route exact path="/incomes">
+						</PrivateRoute>
+						<PrivateRoute exact path="/incomes">
 							<Incomes />
-						</Route>
-						<Route exact path="/outgoings">
+						</PrivateRoute>
+						<PrivateRoute exact path="/outgoings">
 							<Outgoings />
-						</Route>
+						</PrivateRoute>
 						<Route exact path="/demo">
 							<Demo />
 						</Route>

@@ -25,10 +25,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 				id: ""
 			},
 			isLoggedIn: false,
-			userIncomes: [],
+			userIncomes: undefined,
 			incomesUSD: 0,
 			userOutgoings: [],
 			exchangeRate: {},
+			userOutgoings: undefined,
 			outgoingsUSD: 0
 
 		},
@@ -48,7 +49,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			sendResetPassword: email => {
 				let response;
-				fetch(`${process.env.BACKEND_URL}/send_reset_password`, {
+				fetch(`${process.env.BACKEND_URL}/api/send_reset_password`, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json"
@@ -59,11 +60,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(result => {
 						if (result.message) alert(result.message);
 					})
-					.catch();
+					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			},
 
 			resetPassword: (token, new_password) => {
-				fetch(`${process.env.BACKEND_URL}/reset_password`, {
+				fetch(`${process.env.BACKEND_URL}/api/reset_password`, {
 					method: "PUT",
 					headers: {
 						"Content-Type": "application/json"
@@ -74,12 +75,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(result => {
 						if (result.message) alert(result.message);
 					})
-					.catch();
+					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			},
 
 			login: (email, password) => {
 				const data = { email, password };
-				fetch(`${process.env.BACKEND_URL}/login`, {
+				fetch(`${process.env.BACKEND_URL}/api/login`, {
 					method: "POST",
 					body: JSON.stringify(data),
 					headers: { "Content-Type": "application/json" }
@@ -88,16 +89,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(result => {
 						if (result.access_token) {
 							localStorage.setItem("jwt-token", result.access_token);
+							setStore({ isLoggedIn: true });
 						} else if (result.message) {
 							alert(result.message);
 						}
 					})
-					.catch(error => console.log("error", error));
+					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			},
 
 			signup: (name, lastname, email, password, repeat_password) => {
 				const data = { name, lastname, email, password, repeat_password };
-				fetch(`${process.env.BACKEND_URL}/signup`, {
+				fetch(`${process.env.BACKEND_URL}/api/signup`, {
 					method: "POST",
 					body: JSON.stringify(data),
 					headers: { "Content-Type": "application/json" }
@@ -108,11 +110,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 							alert(result.message);
 						}
 					})
-					.catch(error => console.log("error", error));
+					.catch(error => {
+						getActions().login(email, password); //esto no es correcto, funciona pero hay que hablar con pablo
+					});
 			},
 
 			getUserIncomes: () => {
-				fetch(`${process.env.BACKEND_URL}/summaryinc`, {
+				fetch(`${process.env.BACKEND_URL}/api/summaryinc`, {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json",
@@ -124,11 +128,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 						if (result.message) {
 							alert(result.message);
 						} else setStore({ userIncomes: result.incomes });
-					});
+					})
+					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			},
 
 			getUserOutgoings: () => {
-				fetch(`${process.env.BACKEND_URL}/summaryout`, {
+				fetch(`${process.env.BACKEND_URL}/api/summaryout`, {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json",
@@ -140,12 +145,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 						if (result.message) {
 							alert(result.message);
 						} else setStore({ userOutgoings: result.outgoings });
-					});
+					})
+					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			},
 
 
 			deleteIncome: id => {
-				fetch(`${process.env.BACKEND_URL}/incomes/${id}`, {
+				fetch(`${process.env.BACKEND_URL}/api/incomes/${id}`, {
 					method: "DELETE",
 					headers: {
 						"Content-Type": "application/json",
@@ -160,12 +166,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 							alert(result.message);
 						} else setStore({ userIncomes: result });
 					})
-					.catch(error => console.log("error", error));
-
+					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			},
 
 			deleteOutgoing: id => {
-				fetch(`${process.env.BACKEND_URL}/outgoings/${id}`, {
+				fetch(`${process.env.BACKEND_URL}/api/outgoings/${id}`, {
 					method: "DELETE",
 					headers: {
 						"Content-Type": "application/json",
@@ -178,7 +183,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 							alert(result.message);
 						} else setStore({ userOutgoings: result });
 					})
-					.catch(error => console.log("error", error));
+					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			}
 		}
 	};

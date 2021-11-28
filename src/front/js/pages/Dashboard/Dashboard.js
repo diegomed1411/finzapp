@@ -13,8 +13,8 @@ const Dashboard = () => {
 	const [difference, setDifference] = useState();
 
 	useEffect(() => {
-		!store.userIncomes.length && actions.getUserIncomes();
-		!store.userOutgoings.length && actions.getUserOutgoings();
+		!store.userIncomes && actions.getUserIncomes();
+		!store.userOutgoings && actions.getUserOutgoings();
 
 		// setIncomes(store.incomesTotal);
 		// setOutgoings(store.outgoingsTotal);
