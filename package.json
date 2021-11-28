@@ -76,7 +76,6 @@
 		]
 	},
 	"dependencies": {
-
 		"bootstrap": "^5.1.1",
 		"moment": "^2.29.1",
 		"prop-types": "^15.6.1",
