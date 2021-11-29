@@ -9,7 +9,9 @@ const Modal = ({ closeModal, isIncome = false, edit = null }) => {
 	const [subtype, setSubtype] = useState(edit ? edit.subtype : "");
 	const [amount, setAmount] = useState(edit ? edit.amount : 0);
 	const [currency, setCurrency] = useState(edit ? edit.currency : "UYU");
-	const [date, setDate] = useState(edit ? edit.date : moment(Date.now()).format("YYYY-MM-DD"));
+	const [date, setDate] = useState(
+		edit ? moment(edit.date).format("YYYY-MM-DD") : moment(Date.now()).format("YYYY-MM-DD")
+	);
 	const [description, setDescription] = useState(edit ? edit.description : "");
 
 	const currencies = ["UYU", "USD"];
@@ -79,7 +81,7 @@ const Modal = ({ closeModal, isIncome = false, edit = null }) => {
 	return (
 		<div className="modal-container" onClick={closeModal}>
 			<div className="modal-card" onClick={e => e.stopPropagation()}>
-				<h1 className="modal-title">{isIncome ? "Nuevo Ingreso" : "Nuevo Egreso"}</h1>
+				<h1 className="modal-title">{`${edit ? "Editar" : "Nuevo"} ${isIncome ? "Ingreso" : "Egreso"}`}</h1>
 				<div>
 					<h6>Tipo</h6>
 					<select
@@ -164,7 +166,7 @@ const Modal = ({ closeModal, isIncome = false, edit = null }) => {
 						Cancelar
 					</button>
 					<button type="submit" className="btn btn-lg button">
-						Agregar
+						{edit ? "Editar" : "Agregar"}
 					</button>
 				</div>
 			</div>

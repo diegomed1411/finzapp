@@ -15,7 +15,7 @@ const Row = ({ data, handleDelete, handleEdit }) => {
 			<div className="cell">{currency}</div>
 			<div className="cell">{moment(date).format("MM/DD/YYYY")}</div>
 			<div className="cell">
-				<i className="far fa-edit" onClick={() => handleEdit(id)} />
+				<i className="far fa-edit" onClick={() => handleEdit({ type, subtype, date, amount, currency, id })} />
 				<i className="far fa-trash-alt" onClick={() => handleDelete(id)} />
 			</div>
 		</div>
