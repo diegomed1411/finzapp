@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { any, string } from "prop-types";
 
 import "./styles.scss";
 import { Link } from "react-router-dom";
+import { Context } from "../../store/appContext";
 
 const Layout = ({ children, path }) => {
+	const { store } = useContext(Context);
+
 	return (
 		<div className="layout">
 			<nav className="menu-container">
@@ -12,9 +15,11 @@ const Layout = ({ children, path }) => {
 					<section className="user">
 						<div className="information-row">
 							<i className="far fa-user user-info" />
-							<h4 className="user-info">Nombre Apellido</h4>
+							<h4 className="user-info">
+								{store.user.name} {store.user.lastname}
+							</h4>
 						</div>
-						<h6 className="user-info">useremail@mail.com</h6>
+						<h6 className="user-info">{store.user.email}</h6>
 					</section>
 					<Link to="/home" style={{ textDecoration: "none" }}>
 						<div className={`menu-button information-row ${path === "dashboard" ? "is-active" : ""}`}>

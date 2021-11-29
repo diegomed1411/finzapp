@@ -3,25 +3,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 	return {
 		store: {
-			message: null,
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			],
-			user: {
-				name: "",
-				lastname: "",
-				email: "",
-				id: ""
-			},
+			user: {},
 			isLoggedIn: false,
 			userIncomes: undefined,
 			incomesUSD: 0,
@@ -31,8 +13,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			outgoingsUSD: 0
 		},
 		actions: {
-			// Use getActions to call a function within a fuction
-
 			getRate: () => {
 				fetch(`${urlapi}`, {
 					method: "GET",
@@ -87,6 +67,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						if (result.access_token) {
 							localStorage.setItem("jwt-token", result.access_token);
 							setStore({ isLoggedIn: true });
+							setStore({ user: result.user });
 						} else if (result.message) {
 							alert(result.message);
 						}
