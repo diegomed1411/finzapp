@@ -158,12 +158,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			},
 
-			amendIncome: (id, type, subtype, currency, description, date, amount) => {
-				const data = { type, subtype, currency, description, date, amount };
+			amendIncome: (id, type, subtype, currency, date, amount, description) => {
+				const data = { type, subtype, currency, date, amount, description };
 				fetch(`${process.env.BACKEND_URL}/api/incomes/${id}`, {
 					method: "PUT",
 					body: JSON.stringify(data),
-					headers: { "Content-Type": "application/json" }
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: "Bearer " + localStorage.getItem("jwt-token")
+					}
 				})
 					.then(response => response.json())
 					.then(result => {
@@ -174,12 +177,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			},
 
-			amendOutgoing: (id, type, subtype, currency, description, date, amount) => {
-				const data = { type, subtype, currency, description, date, amount };
+			amendOutgoing: (id, type, subtype, currency, date, amount, description) => {
+				const data = { type, subtype, currency, date, amount, description };
 				fetch(`${process.env.BACKEND_URL}/api/outgoings/${id}`, {
 					method: "PUT",
 					body: JSON.stringify(data),
-					headers: { "Content-Type": "application/json" }
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: "Bearer " + localStorage.getItem("jwt-token")
+					}
 				})
 					.then(response => response.json())
 					.then(result => {

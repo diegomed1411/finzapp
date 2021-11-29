@@ -81,8 +81,13 @@ const Modal = ({ closeModal, isIncome = false, edit = null }) => {
 		  ];
 
 	const onSubmit = () => {
-		if (isIncome) actions.newIncome(type, subtype, currency, date, amount, description);
-		else actions.newOutgoing(type, subtype, currency, date, amount, description);
+		if (edit) {
+			if (isIncome) actions.amendIncome(edit.id, type, subtype, currency, date, amount, description);
+			else actions.amendOutgoing(edit.id, type, subtype, currency, date, amount, description);
+		} else {
+			if (isIncome) actions.newIncome(type, subtype, currency, date, amount, description);
+			else actions.newOutgoing(type, subtype, currency, date, amount, description);
+		}
 		closeModal();
 	};
 
