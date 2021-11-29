@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { any, func, boolean } from "prop-types";
 import moment from "moment";
 
 import "./styles.scss";
+import { Context } from "../../store/appContext";
 
 const Modal = ({ closeModal, isIncome = false, edit = null }) => {
+	const { actions } = useContext(Context);
 	const [type, setType] = useState(edit ? edit.type : "");
 	const [subtype, setSubtype] = useState(edit ? edit.subtype : "");
 	const [amount, setAmount] = useState(edit ? edit.amount : 0);
@@ -77,6 +79,12 @@ const Modal = ({ closeModal, isIncome = false, edit = null }) => {
 					subtypes: ["Inmuebles", "Instrumentos Financieron", "Ganado", "Otros"]
 				}
 		  ];
+
+	const onSubmit = () => {
+		if (isIncome) actions.newIncome(type, subtype, currency, date, amount, description);
+		else actions.newOutgoing(type, subtype, currency, date, amount, description);
+		closeModal();
+	};
 
 	return (
 		<div className="modal-container" onClick={closeModal}>
@@ -165,7 +173,7 @@ const Modal = ({ closeModal, isIncome = false, edit = null }) => {
 					<button onClick={closeModal} type="button" className="btn btn-light">
 						Cancelar
 					</button>
-					<button type="submit" className="btn btn-lg button">
+					<button onClick={onSubmit} type="submit" className="btn btn-lg button">
 						{edit ? "Editar" : "Agregar"}
 					</button>
 				</div>
