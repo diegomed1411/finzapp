@@ -1,0 +1,76 @@
+.modal-container {
+    background-color: rgba(0, 0, 0, 0.35);
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    .modal-card {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        width: 600px;
+        padding: 24px;
+        background-color: #ffffff;
+        border-radius: 16px;
+        cursor: initial;
+
+        .amount-container {
+            display: flex;
+
+            .amount {
+                box-sizing: border-box;
+                width: 80%;
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+
+            .currency {
+                box-sizing: border-box;
+                border-left: 0;
+                width: 20%;
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+        }
+
+        .text-area {
+            resize: none;
+        }
+
+    }
+    
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+
+    .button {
+        background-color: #deb841;
+        transition: 0.2s;
+
+        &:hover {
+            background-color: #de9e36;
+        }
+
+    }
+
+    .bottom-container {
+        display: flex;
+        justify-content: flex-end;
+        gap: 16px;
+    }
+
+}

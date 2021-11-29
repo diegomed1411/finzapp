@@ -1,5 +1,4 @@
 const getState = ({ getStore, getActions, setStore }) => {
-	const urlback = "https://3001-coffee-amphibian-7tw66dph.ws-us17.gitpod.io/api"; // Defino url de peticion de API con 100 resultados
 	const urlapi = "http://api.currencylayer.com/live?access_key=a3f96353a3db8d1757a469f86fa0160b&format=1";
 
 	return {
@@ -193,7 +192,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					})
 					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			},
-
 
 			deleteIncome: id => {
 				fetch(`${process.env.BACKEND_URL}/api/incomes/${id}`, {

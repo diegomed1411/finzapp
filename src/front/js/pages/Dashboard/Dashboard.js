@@ -2,8 +2,10 @@ import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import "./styles.scss";
-import Layout from "../../component/Layout/Layout";
+import Layout from "../../component/Layout";
+import Modal from "../../component/Modal";
 import { Context } from "../../store/appContext";
+
 const Dashboard = () => {
 	const { actions, store } = useContext(Context);
 	const [incomeModal, setIncomeModal] = useState();
@@ -23,15 +25,13 @@ const Dashboard = () => {
 
 	return (
 		<Layout path="dashboard">
+			{incomeModal && <Modal isIncome closeModal={() => setIncomeModal(false)} />}
+			{outgoingModal && <Modal closeModal={() => setOutgoingModal(false)} />}
 			<div className="dashboard">
 				<div className="information-container">
 					<div className="side-container">
 						<h1 className="title m-0">Ingresos</h1>
-						<button
-							type="submit"
-							className="btn btn-lg button"
-							data-bs-toggle="modal"
-							data-bs-target="#newIncomeModal">
+						<button type="submit" className="btn btn-lg button" onClick={() => setIncomeModal(true)}>
 							Nuevo Ingreso
 						</button>
 						<Link to="/incomes">
@@ -79,7 +79,7 @@ const Dashboard = () => {
 				<div className="bottom-container">
 					<div className="information-container column">
 						<h3 className="m-0">Términos relativos</h3>
-						<h1 className="value">30%</h1>
+						<h1 className="value" />
 					</div>
 					<div className="information-container column">
 						<h3 className="m-0">Términos absolutos</h3>
