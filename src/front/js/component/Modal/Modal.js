@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { any, func, boolean } from "prop-types";
 import moment from "moment";
 
 import "./styles.scss";
+import { Context } from "../../store/appContext";
 
 const Modal = ({ closeModal, isIncome = false, edit = null }) => {
+	const { actions } = useContext(Context);
 	const [type, setType] = useState(edit ? edit.type : "");
 	const [subtype, setSubtype] = useState(edit ? edit.subtype : "");
-	const [amount, setAmount] = useState(edit ? edit.amount : 0);
+	const [amount, setAmount] = useState(edit ? edit.amount : undefined);
 	const [currency, setCurrency] = useState(edit ? edit.currency : "UYU");
 	const [date, setDate] = useState(
 		edit ? moment(edit.date).format("YYYY-MM-DD") : moment(Date.now()).format("YYYY-MM-DD")
@@ -77,6 +79,17 @@ const Modal = ({ closeModal, isIncome = false, edit = null }) => {
 					subtypes: ["Inmuebles", "Instrumentos Financieron", "Ganado", "Otros"]
 				}
 		  ];
+
+	const onSubmit = () => {
+		if (edit) {
+			if (isIncome) actions.amendIncome(edit.id, type, subtype, currency, date, amount, description);
+			else actions.amendOutgoing(edit.id, type, subtype, currency, date, amount, description);
+		} else {
+			if (isIncome) actions.newIncome(type, subtype, currency, date, amount, description);
+			else actions.newOutgoing(type, subtype, currency, date, amount, description);
+		}
+		closeModal();
+	};
 
 	return (
 		<div className="modal-container" onClick={closeModal}>
@@ -165,7 +178,7 @@ const Modal = ({ closeModal, isIncome = false, edit = null }) => {
 					<button onClick={closeModal} type="button" className="btn btn-light">
 						Cancelar
 					</button>
-					<button type="submit" className="btn btn-lg button">
+					<button onClick={onSubmit} type="submit" className="btn btn-lg button">
 						{edit ? "Editar" : "Agregar"}
 					</button>
 				</div>

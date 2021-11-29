@@ -3,38 +3,18 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 	return {
 		store: {
-			message: null,
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			],
-			user: {
-				name: "",
-				lastname: "",
-				email: "",
-				id: ""
-			},
+			user: {},
 			isLoggedIn: false,
 			userIncomes: undefined,
 			incomesUSD: 0,
 			userOutgoings: [],
-			exchangeRate: undefined,
+			exchangeRate: 42,
 			userOutgoings: undefined,
 			outgoingsUSD: 0
 		},
 		actions: {
-			// Use getActions to call a function within a fuction
-
 			getRate: () => {
-				fetch(`${urlapi}`, {
+				fetch(urlapi, {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json"
@@ -45,7 +25,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			sendResetPassword: email => {
-				let response;
 				fetch(`${process.env.BACKEND_URL}/api/send_reset_password`, {
 					method: "POST",
 					headers: {
@@ -87,9 +66,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 						if (result.access_token) {
 							localStorage.setItem("jwt-token", result.access_token);
 							setStore({ isLoggedIn: true });
+							setStore({ user: result.user });
 						} else if (result.message) {
 							alert(result.message);
 						}
+						//getActions().getRate();
 					})
 					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			},
@@ -124,24 +105,18 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(result => {
 						if (result.message) {
 							alert(result.message);
-						} else 
-						setStore({ userIncomes: result.incomes });
+						} else {
+							setStore({ userIncomes: result.incomes });
+							let usd = 0;
+							result.incomes.forEach(income => {
+								if (income.currency == "UYU") {
+									usd += income.amount / getStore().exchangeRate;
+								} else usd += income.amount;
+							});
+							setStore({ incomesUSD: usd });
+						}
 					})
 					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
-			},
-
-			getUserIncomesUSD: () =>{
-				let incomes = getUserIncomes();
-				let USDincomes;
-				let exchangeRate = exchangeRate();
-				incomes.incomes.forEach(element => {
-					if (element.currency == "UYU") {
-						element.currency = "USD";
-						element.amount = element.amount / exchangeRate;
-
-					}
-				});
-
 			},
 
 			getUserOutgoings: () => {
@@ -156,39 +131,54 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(result => {
 						if (result.message) {
 							alert(result.message);
-						} else setStore({ userOutgoings: result.outgoings });
+						} else {
+							setStore({ userOutgoings: result.outgoings });
+							let usd = 0;
+							result.outgoings.forEach(outgoing => {
+								if (outgoing.currency == "UYU") {
+									usd += outgoing.amount / getStore().exchangeRate;
+								} else usd += outgoing.amount;
+							});
+							setStore({ outgoingsUSD: usd });
+						}
 					})
 					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			},
 
-			amendIncome: (id, type, subtype, currency, description, date, amount ) => {
-				const data = { type, subtype, currency, description, date, amount };
+			amendIncome: (id, type, subtype, currency, date, amount, description) => {
+				const data = { type, subtype, currency, date, amount, description };
 				fetch(`${process.env.BACKEND_URL}/api/incomes/${id}`, {
 					method: "PUT",
 					body: JSON.stringify(data),
-					headers: { "Content-Type": "application/json" }
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: "Bearer " + localStorage.getItem("jwt-token")
+					}
 				})
 					.then(response => response.json())
 					.then(result => {
 						if (result.message) {
 							alert(result.message);
-						} else setStore({ userIncomes: result });
+						} else getActions.getUserIncomes();
 					})
 					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			},
 
-			amendOutgoing: (id, type, subtype, currency, description, date, amount ) => {
-				const data = { type, subtype, currency, description, date, amount };
+			amendOutgoing: (id, type, subtype, currency, date, amount, description) => {
+				const data = { type, subtype, currency, date, amount, description };
 				fetch(`${process.env.BACKEND_URL}/api/outgoings/${id}`, {
 					method: "PUT",
 					body: JSON.stringify(data),
-					headers: { "Content-Type": "application/json" }
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: "Bearer " + localStorage.getItem("jwt-token")
+					}
 				})
 					.then(response => response.json())
 					.then(result => {
 						if (result.message) {
 							alert(result.message);
-						} else setStore({ userOutgoings: result });
+						} else getActions.getUserOutgoings();
 					})
 					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			},
@@ -205,7 +195,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(result => {
 						if (result.message) {
 							alert(result.message);
-						} else setStore({ userIncomes: result });
+						} else getActions().getUserIncomes();
 					})
 					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			},
@@ -222,7 +212,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(result => {
 						if (result.message) {
 							alert(result.message);
-						} else setStore({ userOutgoings: result });
+						} else getActions().getUserOutgoings();
 					})
 					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			},
@@ -232,16 +222,19 @@ const getState = ({ getStore, getActions, setStore }) => {
 				fetch(`${process.env.BACKEND_URL}/api/incomes`, {
 					method: "POST",
 					body: JSON.stringify(data),
-					headers: { "Content-Type": "application/json" }
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: "Bearer " + localStorage.getItem("jwt-token")
+					}
 				})
 					.then(response => response.json())
 					.then(result => {
 						if (result.message) {
 							alert(result.message);
 						}
+						getActions().getUserIncomes();
 					})
-					.catch(error => alert("Ha ocurrido un error, intente mas tarde.") //esto no es correcto, funciona pero hay que hablar con pablo
-					);
+					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			},
 
 			newOutgoing: (type, subtype, currency, date, amount, description) => {
@@ -249,19 +242,20 @@ const getState = ({ getStore, getActions, setStore }) => {
 				fetch(`${process.env.BACKEND_URL}/api/outgoings`, {
 					method: "POST",
 					body: JSON.stringify(data),
-					headers: { "Content-Type": "application/json" }
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: "Bearer " + localStorage.getItem("jwt-token")
+					}
 				})
 					.then(response => response.json())
 					.then(result => {
 						if (result.message) {
 							alert(result.message);
 						}
+						getActions().getUserOutgoings();
 					})
-					.catch(error => alert("Ha ocurrido un error, intente mas tarde.") //esto no es correcto, funciona pero hay que hablar con pablo
-					);
-			},
-
-
+					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
+			}
 		}
 	};
 };

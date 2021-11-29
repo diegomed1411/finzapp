@@ -38,6 +38,12 @@
             &.curr {
                 width: 100%;
             }
+
+            &.not-active {
+                box-sizing: border-box;
+                background-color: transparent;
+                border: solid 2px #de9e36;
+            }
         
             &:hover {
                 background-color: #de9e36;

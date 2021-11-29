@@ -21,7 +21,7 @@ const Outgoings = () => {
 				{store.userOutgoings.length ? (
 					<Table
 						movements={store.userOutgoings}
-						handleDelete={id => actions.deleteOutcome(id)}
+						handleDelete={id => actions.deleteOutgoing(id)}
 						handleEdit={income => {
 							setSelected(income);
 							setIsOpenModal(true);
