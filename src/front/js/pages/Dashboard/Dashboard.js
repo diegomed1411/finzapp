@@ -10,17 +10,26 @@ const Dashboard = () => {
 	const { actions, store } = useContext(Context);
 	const [incomeModal, setIncomeModal] = useState();
 	const [outgoingModal, setOutgoingModal] = useState();
-	const [incomes, setIncomes] = useState();
-	const [outgoings, setOutgoings] = useState();
-	const [difference, setDifference] = useState();
+	const [incomes, setIncomes] = useState(store.incomesUSD);
+	const [outgoings, setOutgoings] = useState(store.outgoingsUSD);
+	const [isUSD, setIsUSD] = useState(true);
+
+	const setUSD = () => {
+		setIncomes(store.incomesUSD);
+		setOutgoings(store.outgoingsUSD);
+		setIsUSD(true);
+	};
+
+	const setUYU = () => {
+		const exchange = store.exchangeRate;
+		setIncomes(store.incomesUSD * exchange);
+		setOutgoings(store.outgoingsUSD * exchange);
+		setIsUSD(false);
+	};
 
 	useEffect(() => {
 		!store.userIncomes && actions.getUserIncomes();
 		!store.userOutgoings && actions.getUserOutgoings();
-
-		// setIncomes(store.incomesTotal);
-		// setOutgoings(store.outgoingsTotal);
-		// setDifference(store.incomesTotal - store.outgoingsTotal);
 	}, []);
 
 	return (
@@ -41,12 +50,18 @@ const Dashboard = () => {
 						</Link>
 					</div>
 					<div className="value-container">
-						<h1 className="value">{incomes}</h1>
+						<h1 className="value">{incomes ? incomes.toFixed(2) : "0.00"}</h1>
 						<div className="currencies">
-							<button type="submit" className="btn btn-sm button curr" onClick={() => setIncomes()}>
+							<button
+								type="submit"
+								className={`btn btn-sm button curr ${isUSD ? "" : "not-active"}`}
+								onClick={setUSD}>
 								USD
 							</button>
-							<button type="submit" className="btn btn-sm button curr" onClick={() => setIncomes()}>
+							<button
+								type="submit"
+								className={`btn btn-sm button curr ${isUSD ? "not-active" : ""}`}
+								onClick={setUYU}>
 								UYU
 							</button>
 						</div>
@@ -65,12 +80,18 @@ const Dashboard = () => {
 						</Link>
 					</div>
 					<div className="value-container">
-						<h1 className="value">{outgoings}</h1>
+						<h1 className="value">{outgoings ? outgoings.toFixed(2) : "0.00"}</h1>
 						<div className="currencies">
-							<button type="submit" className="btn btn-sm button curr" onClick={() => setOutgoings()}>
+							<button
+								type="submit"
+								className={`btn btn-sm button curr ${isUSD ? "" : "not-active"}`}
+								onClick={setUSD}>
 								USD
 							</button>
-							<button type="submit" className="btn btn-sm button curr" onClick={() => setOutgoings()}>
+							<button
+								type="submit"
+								className={`btn btn-sm button curr ${isUSD ? "not-active" : ""}`}
+								onClick={setUYU}>
 								UYU
 							</button>
 						</div>
@@ -79,23 +100,27 @@ const Dashboard = () => {
 				<div className="bottom-container">
 					<div className="information-container column">
 						<h3 className="m-0">Términos relativos</h3>
-						<h1 className="value" />
+						<h1 className="value">
+							{incomes && outgoings ? ((100 * incomes) / outgoings).toFixed(0) : 0}%
+						</h1>
 					</div>
 					<div className="information-container column">
 						<h3 className="m-0">Términos absolutos</h3>
 						<div className="value-container">
-							<h1 className="value">{difference}</h1>
+							<h1 className="value">
+								{incomes && outgoings ? (incomes - outgoings).toFixed(2) : "0.00"}
+							</h1>
 							<div className="currencies">
 								<button
 									type="submit"
-									className="btn btn-sm button curr"
-									onClick={() => setDifference()}>
+									className={`btn btn-sm button curr ${isUSD ? "" : "not-active"}`}
+									onClick={setUSD}>
 									USD
 								</button>
 								<button
 									type="submit"
-									className="btn btn-sm button curr"
-									onClick={() => setDifference()}>
+									className={`btn btn-sm button curr ${isUSD ? "not-active" : ""}`}
+									onClick={setUYU}>
 									UYU
 								</button>
 							</div>

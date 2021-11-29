@@ -8,13 +8,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 			userIncomes: undefined,
 			incomesUSD: 0,
 			userOutgoings: [],
-			exchangeRate: undefined,
+			exchangeRate: 42,
 			userOutgoings: undefined,
 			outgoingsUSD: 0
 		},
 		actions: {
 			getRate: () => {
-				fetch(`${urlapi}`, {
+				fetch(urlapi, {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json"
@@ -25,7 +25,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			sendResetPassword: email => {
-				let response;
 				fetch(`${process.env.BACKEND_URL}/api/send_reset_password`, {
 					method: "POST",
 					headers: {
@@ -71,6 +70,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						} else if (result.message) {
 							alert(result.message);
 						}
+						//getActions().getRate();
 					})
 					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			},
@@ -105,21 +105,18 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(result => {
 						if (result.message) {
 							alert(result.message);
-						} else setStore({ userIncomes: result.incomes });
+						} else {
+							setStore({ userIncomes: result.incomes });
+							let usd = 0;
+							result.incomes.forEach(income => {
+								if (income.currency == "UYU") {
+									usd += income.amount / getStore().exchangeRate;
+								} else usd += income.amount;
+							});
+							setStore({ incomesUSD: usd });
+						}
 					})
 					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
-			},
-
-			getUserIncomesUSD: () => {
-				let incomes = getUserIncomes();
-				let USDincomes;
-				let exchangeRate = exchangeRate();
-				incomes.incomes.forEach(element => {
-					if (element.currency == "UYU") {
-						element.currency = "USD";
-						element.amount = element.amount / exchangeRate;
-					}
-				});
 			},
 
 			getUserOutgoings: () => {
@@ -134,7 +131,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(result => {
 						if (result.message) {
 							alert(result.message);
-						} else setStore({ userOutgoings: result.outgoings });
+						} else {
+							setStore({ userOutgoings: result.outgoings });
+							let usd = 0;
+							result.outgoings.forEach(outgoing => {
+								if (outgoing.currency == "UYU") {
+									usd += outgoing.amount / getStore().exchangeRate;
+								} else usd += outgoing.amount;
+							});
+							setStore({ outgoingsUSD: usd });
+						}
 					})
 					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			},
@@ -153,7 +159,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(result => {
 						if (result.message) {
 							alert(result.message);
-						} else setStore({ userIncomes: result });
+						} else getActions.getUserIncomes();
 					})
 					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			},
@@ -172,7 +178,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(result => {
 						if (result.message) {
 							alert(result.message);
-						} else setStore({ userOutgoings: result });
+						} else getActions.getUserOutgoings();
 					})
 					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			},
@@ -189,7 +195,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(result => {
 						if (result.message) {
 							alert(result.message);
-						} else setStore({ userIncomes: result });
+						} else getActions().getUserIncomes();
 					})
 					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			},
@@ -206,7 +212,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(result => {
 						if (result.message) {
 							alert(result.message);
-						} else setStore({ userOutgoings: result });
+						} else getActions().getUserOutgoings();
 					})
 					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			},

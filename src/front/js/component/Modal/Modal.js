@@ -9,7 +9,7 @@ const Modal = ({ closeModal, isIncome = false, edit = null }) => {
 	const { actions } = useContext(Context);
 	const [type, setType] = useState(edit ? edit.type : "");
 	const [subtype, setSubtype] = useState(edit ? edit.subtype : "");
-	const [amount, setAmount] = useState(edit ? edit.amount : 0);
+	const [amount, setAmount] = useState(edit ? edit.amount : undefined);
 	const [currency, setCurrency] = useState(edit ? edit.currency : "UYU");
 	const [date, setDate] = useState(
 		edit ? moment(edit.date).format("YYYY-MM-DD") : moment(Date.now()).format("YYYY-MM-DD")
