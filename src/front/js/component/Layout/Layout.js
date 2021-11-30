@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { Context } from "../../store/appContext";
 
 const Layout = ({ children, path }) => {
-	const { store } = useContext(Context);
+	const { actions, store } = useContext(Context);
 
 	return (
 		<div className="layout">
@@ -40,7 +40,7 @@ const Layout = ({ children, path }) => {
 						</div>
 					</Link>
 				</nav>
-				<div className="menu-button information-row leave">
+				<div className="menu-button information-row leave" onClick={() => actions.logOut()}>
 					<h5 className="title">Cerrar sesión</h5>
 					<i className="fas fa-sign-out-alt title" />
 				</div>

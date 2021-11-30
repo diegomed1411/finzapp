@@ -1,6 +1,4 @@
 const getState = ({ getStore, getActions, setStore }) => {
-	const urlapi = "http://api.currencylayer.com/live?access_key=a3f96353a3db8d1757a469f86fa0160b&format=1";
-
 	return {
 		store: {
 			user: {},
@@ -8,20 +6,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 			userIncomes: undefined,
 			incomesUSD: 0,
 			userOutgoings: [],
-			exchangeRate: 42,
+			exchangeRate: undefined,
 			userOutgoings: undefined,
 			outgoingsUSD: 0
 		},
 		actions: {
 			getRate: () => {
-				fetch(urlapi, {
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json"
-					}
+				fetch("https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/usd.json", {
+					method: "GET"
 				})
 					.then(response => response.json())
-					.then(result => setStore({ exchangeRate: result.quotes.USDUYU }));
+					.then(result => setStore({ exchangeRate: result.usd.uyu }));
 			},
 
 			sendResetPassword: email => {
@@ -36,7 +31,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(result => {
 						if (result.message) alert(result.message);
 					})
-					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
+					.catch();
 			},
 
 			resetPassword: (token, new_password) => {
@@ -51,7 +46,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(result => {
 						if (result.message) alert(result.message);
 					})
-					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
+					.catch();
 			},
 
 			login: (email, password) => {
@@ -70,9 +65,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 						} else if (result.message) {
 							alert(result.message);
 						}
-						//getActions().getRate();
+						getActions().getRate();
 					})
 					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
+			},
+
+			logOut: () => {
+				localStorage.removeItem("jwt-token");
+				setStore({ isLoggedIn: false });
+				setStore({ userIncomes: undefined });
+				setStore({ userOutgoings: undefined });
 			},
 
 			signup: (name, lastname, email, password, repeat_password) => {
@@ -159,7 +161,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(result => {
 						if (result.message) {
 							alert(result.message);
-						} else getActions.getUserIncomes();
+						} else getActions().getUserIncomes();
 					})
 					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			},
@@ -178,7 +180,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(result => {
 						if (result.message) {
 							alert(result.message);
-						} else getActions.getUserOutgoings();
+						} else getActions().getUserOutgoings();
 					})
 					.catch(error => alert("Ha ocurrido un error, intente mas tarde."));
 			},
