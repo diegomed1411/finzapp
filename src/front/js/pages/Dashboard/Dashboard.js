@@ -50,7 +50,9 @@ const Dashboard = () => {
 						</Link>
 					</div>
 					<div className="value-container">
-						<h1 className="value">{incomes ? incomes.toFixed(2) : "0.00"}</h1>
+						<h1 className="value" style={{ color: "#90A955" }}>
+							{incomes ? incomes.toFixed(2) : "0.00"}
+						</h1>
 						<div className="currencies">
 							<button
 								type="submit"
@@ -80,7 +82,9 @@ const Dashboard = () => {
 						</Link>
 					</div>
 					<div className="value-container">
-						<h1 className="value">{outgoings ? outgoings.toFixed(2) : "0.00"}</h1>
+						<h1 className="value" style={{ color: "#EF5350" }}>
+							{outgoings ? outgoings.toFixed(2) : "0.00"}
+						</h1>
 						<div className="currencies">
 							<button
 								type="submit"
@@ -101,7 +105,7 @@ const Dashboard = () => {
 					<div className="information-container column">
 						<h3 className="m-0">Términos relativos</h3>
 						<h1 className="value">
-							{incomes && outgoings ? ((100 * incomes) / outgoings).toFixed(0) : 0}%
+							{incomes && outgoings ? ((100 * incomes) / outgoings - 100).toFixed(0) : 0}%
 						</h1>
 					</div>
 					<div className="information-container column">
