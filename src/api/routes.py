@@ -57,7 +57,7 @@ def send_reset_password():
         raise APIException('Please check the entered email and try again', status_code=404)
     
     token = user.get_reset_token().replace('.',"~")
-    link = f"https://3000-azure-swallow-c5iuhp2z.ws-us18.gitpod.io/reset_password/{token}"
+    link = f"https://finzapp.herokuapp.com/reset_password/{token}"
 
     msg = Message()
     msg.subject = "Recupera tu contraseña"
