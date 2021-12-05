@@ -1,3 +1,11 @@
+Proyecto Final para Full Stack Developer Bootcamp de 4Geeks Academy
+Integrantes:
+Camila Sanchez, Rafael Aguiar, Diego Medina
+
+
+
+
+
 # WebApp boilerplate with React JS and Flask API
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io#https://github.com/4GeeksAcademy/react-flask-hello.git)
 
